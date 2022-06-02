@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "830630970733",
+    "firebase_url": "https://firechat-15f95.firebaseio.com",
+    "project_id": "firechat-15f95",
+    "storage_bucket": "firechat-15f95.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830630970733:android:20097a927b7e4556204664",
+        "android_client_info": {
+          "package_name": "com.example.balance_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "830630970733-mv5solvcjfdifqg83vijvn47jabu23sd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfpemGpY4xObn_aaSfLsic5_Zzge5v018"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "830630970733-mv5solvcjfdifqg83vijvn47jabu23sd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
