@@ -22,7 +22,10 @@ class ExpensesService with ChangeNotifier {
     final year = DateTime.now().year;
     final month = DateTime.now().month;
     List<Expense> expensesList = [];
-    _instance.get().then((QuerySnapshot querySnapshot) {
+    _instance
+        .orderBy('date', descending: true)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
         final expense = doc.data() as Map<String, dynamic>;
         final expenseDate = DateTime.parse(expense['date']);

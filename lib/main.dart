@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => BalanceService()),
-        ChangeNotifierProvider(create: (_) => ExpensesService()),
       ],
       child: MaterialApp(
           title: 'Balance App',
