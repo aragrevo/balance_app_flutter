@@ -1,6 +1,6 @@
 import 'package:balance_app/screens/screens.dart';
+import 'package:balance_app/screens/transaction_screen.dart';
 import 'package:balance_app/services/auth_service.dart';
-import 'package:balance_app/services/expenses.service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -38,8 +38,12 @@ class MyApp extends StatelessWidget {
             HomeScreen.routeName: (_) => const HomeScreen(),
             LoginScreen.routeName: (_) => const LoginScreen(),
             SigninScreen.routeName: (_) => const SigninScreen(),
+            TransactionScreen.routeName: (_) => const TransactionScreen(),
           },
           theme: ThemeData.light().copyWith(
+            inputDecorationTheme: InputDecorationTheme(
+              border: OutlineInputBorder(),
+            ),
             appBarTheme: const AppBarTheme(
                 color: Colors.white,
                 elevation: 0.1,

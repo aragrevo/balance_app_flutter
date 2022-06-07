@@ -6,6 +6,7 @@ class ExpensesService with ChangeNotifier {
   final CollectionReference _instance =
       FirebaseFirestore.instance.collection('expenses');
   final List<Expense> _expenses = [];
+  var isSaving = false;
 
   List<Expense> get expensesList => [..._expenses];
   set expensesList(List<Expense> value) {
@@ -35,5 +36,13 @@ class ExpensesService with ChangeNotifier {
       });
       this.expensesList = expensesList;
     });
+  }
+
+  Future<void> addExpense(Expense expense) async {
+    isSaving = true;
+    notifyListeners();
+    await _instance.add(expense.toJson());
+    isSaving = false;
+    notifyListeners();
   }
 }

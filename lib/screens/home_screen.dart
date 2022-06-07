@@ -1,4 +1,5 @@
 import 'package:balance_app/models/expense.dart';
+import 'package:balance_app/screens/transaction_screen.dart';
 import 'package:balance_app/services/balance.service.dart';
 import 'package:balance_app/services/expenses.service.dart';
 import 'package:balance_app/services/services.dart';
@@ -45,7 +46,9 @@ class _Home extends StatelessWidget {
               ),
             ]),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, TransactionScreen.routeName);
+          },
           tooltip: 'Increment',
           child: const Icon(Icons.add),
           elevation: 2,
