@@ -19,7 +19,7 @@ class ExpensesService with ChangeNotifier {
     getExpenses();
   }
 
-  getExpenses() {
+  Future<void> getExpenses() async {
     final year = DateTime.now().year;
     final month = DateTime.now().month;
     List<Expense> expensesList = [];
@@ -35,14 +35,20 @@ class ExpensesService with ChangeNotifier {
         }
       });
       this.expensesList = expensesList;
+      notifyListeners();
     });
   }
 
   Future<void> addExpense(Expense expense) async {
     isSaving = true;
     notifyListeners();
-    await _instance.add(expense.toJson());
-    isSaving = false;
-    notifyListeners();
+    try {
+      await _instance.add(expense.toJson());
+    } catch (e) {
+      print(e);
+    } finally {
+      isSaving = false;
+      notifyListeners();
+    }
   }
 }

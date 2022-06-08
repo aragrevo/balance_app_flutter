@@ -1,5 +1,6 @@
 import 'package:balance_app/models/expense.dart';
 import 'package:balance_app/providers/transaction_form.provider.dart';
+import 'package:balance_app/services/balance.service.dart';
 import 'package:balance_app/services/categories.service.dart';
 import 'package:balance_app/services/expenses.service.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class _Body extends StatelessWidget {
       body: Container(
         padding: EdgeInsets.all(20),
         color: Colors.white,
-        child: _Form(),
+        child: const _Form(),
       ),
     );
   }
@@ -48,6 +49,7 @@ class _Form extends StatelessWidget {
   Widget build(BuildContext context) {
     final categoriesSvc = Provider.of<CategoriesService>(context);
     final expensesSvc = Provider.of<ExpensesService>(context);
+    final balanceSvc = Provider.of<BalanceService>(context);
     final form = Provider.of<TransactionFormProvider>(context);
     final categories = categoriesSvc.categoriesList;
     final document = form.document;
@@ -124,7 +126,15 @@ class _Form extends StatelessWidget {
                             description: document['category'],
                             quantity: 1);
                         await expensesSvc.addExpense(data);
-                        expensesSvc.getExpenses();
+                        final currentMonth = balanceSvc.getCurrentMonth();
+                        await balanceSvc.getBalance(currentMonth);
+                        final obj = balanceSvc.balance;
+                        obj['expense']['value'] += data.cost;
+                        obj['expense']['observation'] = data.date;
+                        obj['balance']['value'] =
+                            obj['revenue']['value'] - obj['expense']['value'];
+                        obj['balance']['observation'] = data.date;
+                        await balanceSvc.saveTotals(currentMonth, obj);
                         Navigator.pop(context);
                       },
                 child: expensesSvc.isSaving

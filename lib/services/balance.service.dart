@@ -6,9 +6,8 @@ class BalanceService with ChangeNotifier {
   final CollectionReference _instance =
       FirebaseFirestore.instance.collection('balance');
   BalanceService() {
-    final monthName = DateFormat.MMMM().format(DateTime.now());
-    final year = DateTime.now().year;
-    getBalance(monthName.toLowerCase() + year.toString());
+    final String monthName = getCurrentMonth();
+    getBalance(monthName);
   }
 
   dynamic _balance;
@@ -19,11 +18,6 @@ class BalanceService with ChangeNotifier {
   }
 
   Future<void> getBalance(String filter) {
-    // balance.get().then((QuerySnapshot querySnapshot) {
-    //   querySnapshot.docs.forEach((doc) {
-    //     print(doc.data());
-    //   });
-    // });
     final CollectionReference instance =
         FirebaseFirestore.instance.collection('data');
     return instance.doc(filter).get().then((DocumentSnapshot documentSnapshot) {
@@ -32,5 +26,19 @@ class BalanceService with ChangeNotifier {
         this.balance = balance;
       }
     });
+  }
+
+  Future<void> saveTotals(String filter, dynamic value) {
+    final CollectionReference instance =
+        FirebaseFirestore.instance.collection('data');
+    return instance.doc(filter).set(value).then((_) {
+      getBalance(filter);
+    });
+  }
+
+  String getCurrentMonth() {
+    final monthName = DateFormat.MMMM().format(DateTime.now());
+    final year = DateTime.now().year;
+    return monthName.toLowerCase() + year.toString();
   }
 }

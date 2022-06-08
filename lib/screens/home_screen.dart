@@ -46,8 +46,12 @@ class _Home extends StatelessWidget {
               ),
             ]),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, TransactionScreen.routeName);
+          onPressed: () async {
+            final result =
+                await Navigator.pushNamed(context, TransactionScreen.routeName);
+            final expensesSvc =
+                Provider.of<ExpensesService>(context, listen: false);
+            await expensesSvc.getExpenses();
           },
           tooltip: 'Increment',
           child: const Icon(Icons.add),
@@ -95,6 +99,7 @@ class _Body extends StatelessWidget {
                   ),
                   child: _ExpensesList(
                     expensesList: expensesSvc.expensesList,
+                    onRefresh: expensesSvc.getExpenses,
                   ),
                 ),
               ),
@@ -272,9 +277,11 @@ class _ExpensesList extends StatelessWidget {
   const _ExpensesList({
     Key? key,
     required this.expensesList,
+    required this.onRefresh,
   }) : super(key: key);
 
   final List<Expense> expensesList;
+  final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -290,18 +297,21 @@ class _ExpensesList extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: ListView.builder(
-              itemCount: expensesList.length,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (_, int index) {
-                final item = expensesList[index];
-                return ItemCard(
-                    amount: item.cost,
-                    title: item.description,
-                    subtitle: DateFormat()
-                        .add_yMMMEd()
-                        .format(DateTime.parse(item.date)));
-              }),
+          child: RefreshIndicator(
+            onRefresh: onRefresh,
+            child: ListView.builder(
+                itemCount: expensesList.length,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (_, int index) {
+                  final item = expensesList[index];
+                  return ItemCard(
+                      amount: item.cost,
+                      title: item.description,
+                      subtitle: DateFormat()
+                          .add_yMMMEd()
+                          .format(DateTime.parse(item.date)));
+                }),
+          ),
         ),
       ],
     );
