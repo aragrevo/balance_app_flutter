@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
                 name: SigninScreen.routeName, page: () => const SigninScreen()),
             GetPage(
                 name: TransactionScreen.routeName,
-                page: () => const TransactionScreen(),
+                page: () => TransactionScreen(),
                 transition: Transition.downToUp),
           ],
           theme: ThemeData.light().copyWith(

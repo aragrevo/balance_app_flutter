@@ -1,6 +1,5 @@
-import 'package:balance_app/models/expense.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:balance_app/models/expense.dart';
 
 class ExpensesService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -25,16 +24,12 @@ class ExpensesService {
     });
   }
 
-  // Future<void> addExpense(Expense expense) async {
-  //   isSaving = true;
-  //   notifyListeners();
-  //   try {
-  //     await _instance.add(expense.toJson());
-  //   } catch (e) {
-  //     print(e);
-  //   } finally {
-  //     isSaving = false;
-  //     notifyListeners();
-  //   }
-  // }
+  Future<void> addExpense(Expense expense) async {
+    try {
+      await _firestore.collection('expenses').add(expense.toJson());
+    } catch (err) {
+      print(err);
+      rethrow;
+    }
+  }
 }

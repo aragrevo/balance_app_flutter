@@ -47,11 +47,7 @@ class _Home extends StatelessWidget {
             ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            final result = Get.toNamed(TransactionScreen.routeName);
-            // await Navigator.pushNamed(context, TransactionScreen.routeName);
-            // final expensesSvc =
-            //     Provider.of<ExpensesService>(context, listen: false);
-            // await expensesSvc.getExpenses();
+            Get.toNamed(TransactionScreen.routeName);
           },
           tooltip: 'Increment',
           child: const Icon(Icons.add),
