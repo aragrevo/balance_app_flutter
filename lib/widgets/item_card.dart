@@ -1,3 +1,4 @@
+import 'package:balance_app/utils/icons.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -24,7 +25,9 @@ class ItemCard extends StatelessWidget {
       ),
       child: ListTile(
         leading: icon ??
-            CircleAvatar(child: Text(title.substring(0, 2).toUpperCase())),
+            CircleAvatar(
+                child: customIcons[title] ??
+                    Text(title.substring(0, 2).toUpperCase())),
         title: Row(
           children: [
             Expanded(child: Text(title), flex: 1),

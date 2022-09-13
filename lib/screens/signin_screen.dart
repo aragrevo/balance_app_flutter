@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class SigninScreen extends StatelessWidget {
   const SigninScreen({Key? key}) : super(key: key);
-  static const String routeName = 'signin';
+  static const String routeName = '/signin';
 
   @override
   Widget build(BuildContext context) {

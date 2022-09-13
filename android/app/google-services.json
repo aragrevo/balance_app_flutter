@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "830630970733-43uh6j80pbcqq9eo4122jkepmoi3qmd0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.balance_app",
+            "certificate_hash": "9b20587f0725738afb9d5853766a6a0719782a46"
+          }
+        },
+        {
+          "client_id": "830630970733-olqptd2callnk1l8g83srifimbd64b9i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.balance_app",
+            "certificate_hash": "e3a5bc4e445fae95fd47ea8890b277745202c651"
+          }
+        },
+        {
           "client_id": "830630970733-mv5solvcjfdifqg83vijvn47jabu23sd.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -30,6 +46,13 @@
             {
               "client_id": "830630970733-mv5solvcjfdifqg83vijvn47jabu23sd.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "830630970733-5jme4lcejdpahta5nedonb2qddgiq249.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.balanceApp"
+              }
             }
           ]
         }

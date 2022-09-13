@@ -1,22 +1,22 @@
+import 'package:balance_app/controllers/expense.controller.dart';
 import 'package:balance_app/models/expense.dart';
 import 'package:balance_app/screens/transaction_screen.dart';
 import 'package:balance_app/services/balance.service.dart';
-import 'package:balance_app/services/expenses.service.dart';
 import 'package:balance_app/services/services.dart';
 import 'package:balance_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
-  static const String routeName = 'home';
+  static const String routeName = '/home';
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => ExpensesService(), child: const _Home());
+    return const _Home();
   }
 }
 
@@ -47,11 +47,11 @@ class _Home extends StatelessWidget {
             ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            final result =
-                await Navigator.pushNamed(context, TransactionScreen.routeName);
-            final expensesSvc =
-                Provider.of<ExpensesService>(context, listen: false);
-            await expensesSvc.getExpenses();
+            final result = Get.toNamed(TransactionScreen.routeName);
+            // await Navigator.pushNamed(context, TransactionScreen.routeName);
+            // final expensesSvc =
+            //     Provider.of<ExpensesService>(context, listen: false);
+            // await expensesSvc.getExpenses();
           },
           tooltip: 'Increment',
           child: const Icon(Icons.add),
@@ -71,7 +71,6 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final expensesSvc = Provider.of<ExpensesService>(context);
     final balanceSvc = Provider.of<BalanceService>(context);
 
     final balance = balanceSvc.balance?['balance'];
@@ -90,18 +89,22 @@ class _Body extends StatelessWidget {
               Container(color: Colors.white, child: const _Summary()),
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(35),
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 15),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(35),
+                      ),
                     ),
-                  ),
-                  child: _ExpensesList(
-                    expensesList: expensesSvc.expensesList,
-                    onRefresh: expensesSvc.getExpenses,
-                  ),
-                ),
+                    child: GetX<ExpenseController>(
+                      init: Get.put<ExpenseController>(ExpenseController()),
+                      builder: (ExpenseController ctrl) {
+                        return _ExpensesList(
+                            expensesList: ctrl.expensesList,
+                            onRefresh: () async {});
+                      },
+                    )),
               ),
             ],
           ),
@@ -299,18 +302,21 @@ class _ExpensesList extends StatelessWidget {
         Expanded(
           child: RefreshIndicator(
             onRefresh: onRefresh,
-            child: ListView.builder(
-                itemCount: expensesList.length,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (_, int index) {
-                  final item = expensesList[index];
-                  return ItemCard(
-                      amount: item.cost,
-                      title: item.description,
-                      subtitle: DateFormat()
-                          .add_yMMMEd()
-                          .format(DateTime.parse(item.date)));
-                }),
+            child: expensesList.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: expensesList.length,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (_, int index) {
+                      final item = expensesList[index];
+                      final txt = item.observation ?? item.description;
+                      return ItemCard(
+                          amount: item.cost,
+                          title: txt,
+                          subtitle: DateFormat()
+                              .add_yMMMEd()
+                              .format(DateTime.parse(item.date)));
+                    }),
           ),
         ),
       ],

@@ -4,6 +4,7 @@ import 'package:balance_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
@@ -30,18 +31,23 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => BalanceService()),
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
           title: 'Balance App',
           debugShowCheckedModeBanner: false,
           initialRoute: SigninScreen.routeName,
-          routes: {
-            HomeScreen.routeName: (_) => const HomeScreen(),
-            LoginScreen.routeName: (_) => const LoginScreen(),
-            SigninScreen.routeName: (_) => const SigninScreen(),
-            TransactionScreen.routeName: (_) => const TransactionScreen(),
-          },
+          getPages: [
+            GetPage(name: HomeScreen.routeName, page: () => const HomeScreen()),
+            GetPage(
+                name: LoginScreen.routeName, page: () => const LoginScreen()),
+            GetPage(
+                name: SigninScreen.routeName, page: () => const SigninScreen()),
+            GetPage(
+                name: TransactionScreen.routeName,
+                page: () => const TransactionScreen(),
+                transition: Transition.downToUp),
+          ],
           theme: ThemeData.light().copyWith(
-            inputDecorationTheme: InputDecorationTheme(
+            inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(),
             ),
             appBarTheme: const AppBarTheme(

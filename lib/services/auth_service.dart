@@ -20,7 +20,7 @@ class AuthService with ChangeNotifier {
       return googleUser;
     } catch (e) {
       print(e);
-      return null;
+      rethrow;
     } finally {
       isLoading = false;
       notifyListeners();
