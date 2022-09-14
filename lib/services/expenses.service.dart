@@ -24,6 +24,21 @@ class ExpensesService {
     });
   }
 
+  Stream<List<Expense>> expenseHistoryStream() {
+    return _firestore
+        .collection('expenses')
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<Expense> retVal = [];
+      query.docs.forEach((doc) {
+        final expense = doc.data() as Map<String, dynamic>;
+        retVal.add(Expense.fromJson(expense));
+      });
+      return retVal;
+    });
+  }
+
   Future<void> addExpense(Expense expense) async {
     try {
       await _firestore.collection('expenses').add(expense.toJson());

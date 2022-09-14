@@ -49,6 +49,7 @@ class _Home extends StatelessWidget {
               ),
             ]),
         floatingActionButton: FloatingActionButton(
+          heroTag: 'btn-home',
           onPressed: () async {
             Get.toNamed(TransactionScreen.routeName);
           },
@@ -130,7 +131,6 @@ class _BalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(balance);
     return Positioned(
       top: 100,
       left: 30,
@@ -338,7 +338,6 @@ class _Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authSvc = Provider.of<AuthService>(context, listen: false);
-    print(authSvc.user?.photoUrl);
     return Padding(
       padding: const EdgeInsets.all(6.0),
       child: authSvc.user?.photoUrl != null

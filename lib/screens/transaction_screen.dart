@@ -110,55 +110,60 @@ class _Form extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: Obx(
-                () => ElevatedButton(
-                  onPressed: ExpenseController.to.isSaving.value
-                      ? null
-                      : () async {
-                          if (!CategoryController.to.isValidForm()) return;
-                          if (CategoryController.to.type.value == 'revenue') {
-                            Get.snackbar('Income', 'Do not save this type');
-                            return;
-                          }
-                          final data = Expense(
-                              cost:
-                                  int.parse(CategoryController.to.amount.value),
-                              date: DateTime.now().toIso8601String(),
-                              description: CategoryController.to.category.value,
-                              quantity: 1);
-                          final saved =
-                              await ExpenseController.to.saveExpense(data);
-                          if (!saved) return;
-                          final obj = BalanceController.to.balance;
-                          final currentMonth =
-                              BalanceService().getCurrentMonth();
-                          obj['expense']['value'] += data.cost;
-                          obj['expense']['observation'] = data.date;
-                          obj['balance']['value'] =
-                              obj['revenue']['value'] - obj['expense']['value'];
-                          obj['balance']['observation'] = data.date;
-                          await BalanceService().saveTotals(currentMonth, obj);
+          Hero(
+            tag: 'btn-home',
+            child: SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: Obx(
+                  () => ElevatedButton(
+                    onPressed: ExpenseController.to.isSaving.value
+                        ? null
+                        : () async {
+                            if (!CategoryController.to.isValidForm()) return;
+                            if (CategoryController.to.type.value == 'revenue') {
+                              Get.snackbar('Income', 'Do not save this type');
+                              return;
+                            }
+                            final data = Expense(
+                                cost: int.parse(
+                                    CategoryController.to.amount.value),
+                                date: DateTime.now().toIso8601String(),
+                                description:
+                                    CategoryController.to.category.value,
+                                quantity: 1);
+                            final saved =
+                                await ExpenseController.to.saveExpense(data);
+                            if (!saved) return;
+                            final obj = BalanceController.to.balance;
+                            final currentMonth =
+                                BalanceService().getCurrentMonth();
+                            obj['expense']['value'] += data.cost;
+                            obj['expense']['observation'] = data.date;
+                            obj['balance']['value'] = obj['revenue']['value'] -
+                                obj['expense']['value'];
+                            obj['balance']['observation'] = data.date;
+                            await BalanceService()
+                                .saveTotals(currentMonth, obj);
 
-                          Get.back();
-                          Get.snackbar('Saved', 'Save correctly');
-                        },
-                  child: ExpenseController.to.isSaving.value
-                      ? const CircularProgressIndicator()
-                      : const Text('Add transaction'),
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.yellow,
-                      onPrimary: Colors.black,
-                      shadowColor: Colors.yellowAccent,
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0)),
-                      textStyle: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w600)),
-                ),
-              )),
+                            Get.back();
+                            Get.snackbar('Saved', 'Save correctly');
+                          },
+                    child: ExpenseController.to.isSaving.value
+                        ? const CircularProgressIndicator()
+                        : const Text('Add transaction'),
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.yellow,
+                        onPrimary: Colors.black,
+                        shadowColor: Colors.yellowAccent,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0)),
+                        textStyle: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600)),
+                  ),
+                )),
+          ),
         ],
       ),
     );

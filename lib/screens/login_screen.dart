@@ -73,7 +73,6 @@ class _CustomFormState extends State<_CustomForm> {
         'email': _emailController.text,
         'password': _passwordController.text,
       };
-      print(user.toString());
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Processing Data')),
       );

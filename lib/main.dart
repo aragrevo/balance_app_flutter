@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
             GetPage(
                 name: TransactionScreen.routeName,
                 page: () => TransactionScreen(),
-                transition: Transition.downToUp),
+                transition: Transition.fadeIn),
           ],
           theme: ThemeData.light().copyWith(
             inputDecorationTheme: const InputDecorationTheme(
