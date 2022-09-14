@@ -1,7 +1,9 @@
+import 'package:balance_app/controllers/balance.controller.dart';
 import 'package:balance_app/controllers/expense.controller.dart';
+import 'package:balance_app/controllers/home.controller.dart';
 import 'package:balance_app/models/expense.dart';
+import 'package:balance_app/screens/screens.dart';
 import 'package:balance_app/screens/transaction_screen.dart';
-import 'package:balance_app/services/balance.service.dart';
 import 'package:balance_app/services/services.dart';
 import 'package:balance_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
+  final homeCtrl = Get.put(HomeController());
 
   static const String routeName = '/home';
 
@@ -24,10 +27,10 @@ class _Home extends StatelessWidget {
   const _Home({
     Key? key,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        extendBody: true,
         appBar: AppBar(
             backgroundColor: Colors.black87,
             titleTextStyle: const TextStyle(
@@ -56,24 +59,25 @@ class _Home extends StatelessWidget {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: const CustomBottomNavigationBar(),
-        body: const _Body());
+        body: Obx(
+          () => IndexedStack(
+            index: HomeController.to.currentIndex.value,
+            children: [_Body(), const SizedBox(), const ChartScreen()],
+          ),
+        ));
   }
 }
 
 class _Body extends StatelessWidget {
-  const _Body({
+  _Body({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final balanceSvc = Provider.of<BalanceService>(context);
-
-    final balance = balanceSvc.balance?['balance'];
-
-    if (balance == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    // if (balanceCtrl.balance.isEmpty) {
+    //   return const Center(child: CircularProgressIndicator());
+    // }
 
     return Container(
       color: Colors.black87,
@@ -104,7 +108,12 @@ class _Body extends StatelessWidget {
               ),
             ],
           ),
-          _BalanceCard(balance: balance),
+          GetX<BalanceController>(
+            init: Get.put<BalanceController>(BalanceController()),
+            builder: (BalanceController ctrl) {
+              return _BalanceCard(balance: ctrl.balance['balance']);
+            },
+          ),
         ],
       ),
     );
@@ -121,6 +130,7 @@ class _BalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(balance);
     return Positioned(
       top: 100,
       left: 30,
@@ -172,14 +182,9 @@ class _Summary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final balanceSvc = Provider.of<BalanceService>(context);
-
-    final income = balanceSvc.balance?['revenue'];
-    final expenses = balanceSvc.balance?['expense'];
-
-    if (income == null || expenses == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    // if (income == null || expenses == null) {
+    //   return const Center(child: CircularProgressIndicator());
+    // }
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
@@ -201,16 +206,22 @@ class _Summary extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                  child: _Item(
-                title: 'Income',
-                amount: income?['value'] ?? 0,
-              )),
-              Expanded(
-                  child: _Item(
-                title: 'Expenses',
-                amount: expenses?['value'] ?? 0,
-              )),
+              Obx(
+                () => Expanded(
+                    child: _Item(
+                  title: 'Income',
+                  amount:
+                      BalanceController.to.balance['revenue']?['value'] ?? 0,
+                )),
+              ),
+              Obx(
+                () => Expanded(
+                    child: _Item(
+                  title: 'Expenses',
+                  amount:
+                      BalanceController.to.balance['expense']?['value'] ?? 0,
+                )),
+              ),
             ],
           ),
           const SizedBox(height: 20),

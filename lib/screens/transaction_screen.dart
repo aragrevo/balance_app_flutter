@@ -1,3 +1,4 @@
+import 'package:balance_app/controllers/balance.controller.dart';
 import 'package:balance_app/controllers/category.controller.dart';
 import 'package:balance_app/controllers/expense.controller.dart';
 import 'package:flutter/material.dart';
@@ -45,8 +46,6 @@ class _Form extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final balanceSvc = Provider.of<BalanceService>(context);
-
     return Form(
       key: CategoryController.to.formKey,
       child: Column(
@@ -120,6 +119,10 @@ class _Form extends StatelessWidget {
                       ? null
                       : () async {
                           if (!CategoryController.to.isValidForm()) return;
+                          if (CategoryController.to.type.value == 'revenue') {
+                            Get.snackbar('Income', 'Do not save this type');
+                            return;
+                          }
                           final data = Expense(
                               cost:
                                   int.parse(CategoryController.to.amount.value),
@@ -129,15 +132,15 @@ class _Form extends StatelessWidget {
                           final saved =
                               await ExpenseController.to.saveExpense(data);
                           if (!saved) return;
-                          final currentMonth = balanceSvc.getCurrentMonth();
-                          await balanceSvc.getBalance(currentMonth);
-                          final obj = balanceSvc.balance;
+                          final obj = BalanceController.to.balance;
+                          final currentMonth =
+                              BalanceService().getCurrentMonth();
                           obj['expense']['value'] += data.cost;
                           obj['expense']['observation'] = data.date;
                           obj['balance']['value'] =
                               obj['revenue']['value'] - obj['expense']['value'];
                           obj['balance']['observation'] = data.date;
-                          await balanceSvc.saveTotals(currentMonth, obj);
+                          await BalanceService().saveTotals(currentMonth, obj);
 
                           Get.back();
                           Get.snackbar('Saved', 'Save correctly');

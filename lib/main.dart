@@ -29,14 +29,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
-        ChangeNotifierProvider(create: (_) => BalanceService()),
       ],
       child: GetMaterialApp(
           title: 'Balance App',
           debugShowCheckedModeBanner: false,
           initialRoute: SigninScreen.routeName,
           getPages: [
-            GetPage(name: HomeScreen.routeName, page: () => const HomeScreen()),
+            GetPage(name: HomeScreen.routeName, page: () => HomeScreen()),
             GetPage(
                 name: LoginScreen.routeName, page: () => const LoginScreen()),
             GetPage(

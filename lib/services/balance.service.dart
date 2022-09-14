@@ -1,30 +1,18 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:balance_app/models/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-class BalanceService with ChangeNotifier {
-  final CollectionReference _instance =
-      FirebaseFirestore.instance.collection('balance');
-  BalanceService() {
-    final String monthName = getCurrentMonth();
-    getBalance(monthName);
-  }
+class BalanceService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  dynamic _balance;
-  dynamic get balance => _balance;
-  set balance(dynamic value) {
-    _balance = value;
-    notifyListeners();
-  }
-
-  Future<void> getBalance(String filter) {
-    final CollectionReference instance =
-        FirebaseFirestore.instance.collection('data');
-    return instance.doc(filter).get().then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        final balance = documentSnapshot.data() as Map<String, dynamic>;
-        this.balance = balance;
-      }
+  Stream<Map<String, dynamic>> balanceStream(String filter) {
+    return _firestore.collection('data').doc(filter).snapshots().map((event) {
+      final balance = event.data() as Map<String, dynamic>;
+      return balance;
     });
   }
 
@@ -32,7 +20,7 @@ class BalanceService with ChangeNotifier {
     final CollectionReference instance =
         FirebaseFirestore.instance.collection('data');
     return instance.doc(filter).set(value).then((_) {
-      getBalance(filter);
+      // getBalance(filter);
     });
   }
 

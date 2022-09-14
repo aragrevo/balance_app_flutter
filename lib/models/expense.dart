@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:balance_app/utils/strings.dart';
+import 'package:balance_app/utils/format.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 Expense expenseFromJson(String str) => Expense.fromJson(json.decode(str));
