@@ -32,22 +32,12 @@ class _Home extends StatelessWidget {
     return Scaffold(
         extendBody: true,
         appBar: AppBar(
-            backgroundColor: Colors.black87,
+            backgroundColor: const Color(0xff2c4260),
             titleTextStyle: const TextStyle(
                 color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
             elevation: 0,
             leading: const _Avatar(),
-            title: const Text('Balance App'),
-            actions: const [
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Icon(Icons.notifications_none),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Icon(Icons.menu_outlined),
-              ),
-            ]),
+            title: const Text('Balance App')),
         floatingActionButton: FloatingActionButton(
           heroTag: 'btn-home',
           onPressed: () async {
@@ -81,7 +71,7 @@ class _Body extends StatelessWidget {
     // }
 
     return Container(
-      color: Colors.black87,
+      color: const Color(0xff2c4260),
       child: Stack(
         children: [
           Column(
@@ -188,7 +178,7 @@ class _Summary extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
-        color: Colors.black87,
+        color: const Color(0xff2c4260),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(35),
         ),

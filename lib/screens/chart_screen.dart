@@ -1,6 +1,5 @@
 import 'package:balance_app/controllers/balance.controller.dart';
 import 'package:balance_app/controllers/expense.controller.dart';
-import 'package:balance_app/models/expense.dart';
 import 'package:balance_app/utils/format.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -14,6 +13,7 @@ class ChartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
     return SingleChildScrollView(
       child: Container(
         margin: EdgeInsets.zero,
@@ -34,15 +34,26 @@ class ChartScreen extends StatelessWidget {
                         children: [
                           const _BalanceHeaderChart(),
                           const SizedBox(
-                            height: 30,
+                            height: 5,
                           ),
-                          //              LegendsListWidget(
-                          //   legends: [
-                          //     Legend("Pilates", pilateColor),
-                          //     Legend("Quick workouts", quickWorkoutColor),
-                          //     Legend("Cycling", cyclingColor),
-                          //   ],
-                          // ),
+                          LegendsListWidget(
+                            legends: [
+                              Legend(
+                                  now
+                                      .subtract(const Duration(days: 60))
+                                      .nameMonth,
+                                  const Color(0xff632af2)),
+                              Legend(
+                                  now
+                                      .subtract(const Duration(days: 30))
+                                      .nameMonth,
+                                  const Color(0xff53fdd7)),
+                              Legend(now.nameMonth, const Color(0xffff5182)),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           _ExpensesChart()
                         ],
                       ))),
@@ -50,6 +61,73 @@ class ChartScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class Legend {
+  final String name;
+  final Color color;
+
+  Legend(this.name, this.color);
+}
+
+class LegendsListWidget extends StatelessWidget {
+  final List<Legend> legends;
+
+  const LegendsListWidget({
+    Key? key,
+    required this.legends,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 16,
+      children: legends
+          .map(
+            (e) => LegendWidget(
+              name: e.name,
+              color: e.color,
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+class LegendWidget extends StatelessWidget {
+  final String name;
+  final Color color;
+
+  const LegendWidget({
+    Key? key,
+    required this.name,
+    required this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          name,
+          style: const TextStyle(
+            color: Color(0xff757391),
+            fontSize: 12,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -108,9 +186,8 @@ class _ExpensesChart extends StatelessWidget {
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 16, //margin top
       child: text,
-      angle: -45,
+      angle: -1.2,
     );
   }
 
@@ -139,7 +216,7 @@ class _ExpensesChart extends StatelessWidget {
       return BarChartGroupData(
           barsSpace: 1,
           x: i,
-          barRods: e.value.mapIndexed((index, element) {
+          barRods: e.value.reversed.mapIndexed((index, element) {
             return BarChartRodData(
               toY: element.toDouble(),
               color: colors[index],

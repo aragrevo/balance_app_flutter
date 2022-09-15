@@ -23,7 +23,7 @@ class Expense {
   factory Expense.fromJson(Map<String, dynamic> json) => Expense(
         cost: json["cost"],
         date: json["date"],
-        description: toCapitalize(json['description'].toString().split("_")[0]),
+        description: json['description'].toString().split("_")[0].toCapitalize,
         quantity: json["quantity"],
         observation: json["observation"],
       );
