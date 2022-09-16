@@ -53,58 +53,61 @@ class _Home extends StatelessWidget {
         body: Obx(
           () => IndexedStack(
             index: HomeController.to.currentIndex.value,
-            children: [_Body(), const SizedBox(), const ChartScreen()],
+            children: const [
+              _Body(),
+              PocketScreen(),
+              ChartScreen(),
+              SizedBox()
+            ],
           ),
         ));
   }
 }
 
 class _Body extends StatelessWidget {
-  _Body({
+  const _Body({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // if (balanceCtrl.balance.isEmpty) {
-    //   return const Center(child: CircularProgressIndicator());
-    // }
-
     return Container(
       color: const Color(0xff2c4260),
       child: Stack(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(color: Colors.white, child: const _Summary()),
-              Expanded(
-                child: Container(
-                    padding:
-                        const EdgeInsets.only(left: 20, right: 20, top: 15),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(35),
-                      ),
-                    ),
-                    child: GetX<ExpenseController>(
-                      init: Get.put<ExpenseController>(ExpenseController()),
-                      builder: (ExpenseController ctrl) {
-                        return _ExpensesList(
-                            expensesList: ctrl.expensesList,
-                            onRefresh: () async {});
-                      },
-                    )),
-              ),
-            ],
-          ),
+          const _Summary(),
           GetX<BalanceController>(
             init: Get.put<BalanceController>(BalanceController()),
             builder: (BalanceController ctrl) {
               return _BalanceCard(balance: ctrl.balance['balance']);
             },
           ),
+          DraggableScrollableSheet(
+              initialChildSize: 0.75,
+              minChildSize: 0.75,
+              maxChildSize: 1,
+              snap: true,
+              builder: (context, scrollController) {
+                return Container(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 0),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(20),
+                    ),
+                  ),
+                  child: GetX<ExpenseController>(
+                    init: Get.put<ExpenseController>(ExpenseController()),
+                    builder: (ExpenseController ctrl) {
+                      return _ExpensesList(
+                          scrollController: scrollController,
+                          expensesList: ctrl.expensesList,
+                          onRefresh: () async {});
+                    },
+                  ),
+                );
+              }),
         ],
       ),
     );
@@ -135,8 +138,8 @@ class _BalanceCard extends StatelessWidget {
             ),
           ],
           borderRadius: BorderRadius.only(
-            topRight: Radius.circular(30),
-            bottomLeft: Radius.circular(30),
+            topRight: Radius.circular(20),
+            bottomLeft: Radius.circular(20),
           ),
         ),
         child: Padding(
@@ -172,15 +175,12 @@ class _Summary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // if (income == null || expenses == null) {
-    //   return const Center(child: CircularProgressIndicator());
-    // }
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
-        color: const Color(0xff2c4260),
+        color: Color(0xff2c4260),
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(35),
+          bottomLeft: Radius.circular(20),
         ),
       ),
       width: double.infinity,
@@ -190,7 +190,7 @@ class _Summary extends StatelessWidget {
           const Text(
             'My wallet',
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           const SizedBox(height: 10),
           Row(
@@ -278,8 +278,10 @@ class _ExpensesList extends StatelessWidget {
     Key? key,
     required this.expensesList,
     required this.onRefresh,
+    required this.scrollController,
   }) : super(key: key);
 
+  final ScrollController scrollController;
   final List<Expense> expensesList;
   final Future<void> Function() onRefresh;
 
@@ -288,12 +290,18 @@ class _ExpensesList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 20),
-        const Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 10),
-          child: Text(
-            'Recent expenses',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.only(top: 0, bottom: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Recent expenses',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.search))
+            ],
           ),
         ),
         Expanded(
@@ -302,6 +310,7 @@ class _ExpensesList extends StatelessWidget {
             child: expensesList.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
+                    controller: scrollController,
                     itemCount: expensesList.length,
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (_, int index) {

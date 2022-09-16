@@ -46,6 +46,11 @@ class MyApp extends StatelessWidget {
                 transition: Transition.fadeIn),
           ],
           theme: ThemeData.light().copyWith(
+            cardTheme: CardTheme(
+                elevation: 0,
+                color: const Color.fromRGBO(249, 249, 249, 1),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16))),
             inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(),
             ),

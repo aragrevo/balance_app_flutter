@@ -11,9 +11,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomAppBar(
       shape: const CircularNotchedRectangle(),
-      notchMargin: 8.0,
+      notchMargin: 5.0,
       child: SizedBox(
-        height: 65,
+        height: 50,
         child: Obx(
           () => Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -24,10 +24,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   highlightColor: Colors.indigoAccent,
                   color: HomeController.to.currentIndex.value == 0
                       ? Colors.indigoAccent
-                      : Colors.black87,
-                  icon: Icon(HomeController.to.currentIndex.value == 0
-                      ? Icons.home_rounded
-                      : Icons.home_outlined),
+                      : Colors.black12,
+                  icon: const Icon(Icons.home_filled),
                   onPressed: () {
                     HomeController.to.changePage(0);
                   },
@@ -35,13 +33,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
               ),
               Expanded(
                 child: IconButton(
-                  highlightColor: Colors.orangeAccent,
+                  highlightColor: Colors.indigoAccent,
                   color: HomeController.to.currentIndex.value == 1
-                      ? Colors.orangeAccent
-                      : Colors.black87,
-                  icon: Icon(HomeController.to.currentIndex.value == 1
-                      ? Icons.account_balance_wallet_rounded
-                      : Icons.account_balance_wallet_outlined),
+                      ? Colors.indigoAccent
+                      : Colors.black12,
+                  icon: const Icon(Icons.account_balance_wallet_rounded),
                   onPressed: () {
                     HomeController.to.changePage(1);
                   },
@@ -50,13 +46,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
               const Expanded(child: Text('')),
               Expanded(
                 child: IconButton(
-                  highlightColor: Colors.greenAccent,
+                  highlightColor: Colors.indigoAccent,
                   color: HomeController.to.currentIndex.value == 2
-                      ? Colors.greenAccent
-                      : Colors.black87,
-                  icon: Icon(HomeController.to.currentIndex.value == 2
-                      ? Icons.pie_chart
-                      : Icons.pie_chart_outline),
+                      ? Colors.indigoAccent
+                      : Colors.black12,
+                  icon: const Icon(Icons.pie_chart),
                   onPressed: () {
                     HomeController.to.changePage(2);
                   },
@@ -64,7 +58,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               ),
               Expanded(
                 child: IconButton(
-                  color: Colors.black87,
+                  color: Colors.black12,
                   icon: const Icon(Icons.settings_outlined),
                   onPressed: () {},
                 ),
