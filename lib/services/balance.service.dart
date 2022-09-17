@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:math';
 
-import 'package:balance_app/models/expense.dart';
-import 'package:flutter/material.dart';
+import 'package:balance_app/models/wallet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
@@ -13,6 +11,22 @@ class BalanceService {
     return _firestore.collection('data').doc(filter).snapshots().map((event) {
       final balance = event.data() as Map<String, dynamic>;
       return balance;
+    });
+  }
+
+  Stream<List<Wallet>> walletStream() {
+    return _firestore
+        .collection('balance')
+        .snapshots()
+        .map((QuerySnapshot query) {
+      List<Wallet> retVal = [];
+      query.docs.forEach((doc) {
+        final wallet = doc.data() as Map<String, dynamic>;
+        if (wallet['name'] != null) {
+          retVal.add(Wallet.fromJson(wallet));
+        }
+      });
+      return retVal;
     });
   }
 

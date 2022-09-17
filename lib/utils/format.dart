@@ -5,6 +5,12 @@ String toCurrency(dynamic value) {
       .format(value);
 }
 
+String toSmallCurrency(dynamic value) {
+  final currency = toCurrency(value);
+  if (currency.length < 4) return currency;
+  return '${currency.substring(0, currency.length - 4)} k';
+}
+
 extension StringUtil on String {
   String get toCapitalize {
     return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";

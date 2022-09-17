@@ -53,11 +53,11 @@ class _Home extends StatelessWidget {
         body: Obx(
           () => IndexedStack(
             index: HomeController.to.currentIndex.value,
-            children: const [
-              _Body(),
+            children: [
+              const _Body(),
               PocketScreen(),
-              ChartScreen(),
-              SizedBox()
+              const ChartScreen(),
+              const SizedBox()
             ],
           ),
         ));

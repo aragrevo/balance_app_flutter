@@ -15,3 +15,18 @@ Map<String, Icon> customIcons = {
   'Gas': const Icon(Icons.outdoor_grill_sharp),
   'Tv': const Icon(Icons.tv_outlined),
 };
+
+Map<String, IconData> walletIcons = {
+  'card': Icons.credit_card,
+  'dinero': Icons.money,
+  'movil': Icons.ad_units_rounded,
+};
+
+Map<String, IconData> pocketIcons = {
+  'card': Icons.credit_card,
+  'box': Icons.money,
+  'pocket': Icons.gite_sharp,
+  'tyba': Icons.donut_large,
+  'littio': Icons.currency_exchange_rounded,
+  'airtm': Icons.currency_bitcoin_rounded
+};
