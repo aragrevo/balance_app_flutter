@@ -7,9 +7,10 @@ import 'package:get/get.dart';
 import 'package:collection/collection.dart';
 
 class ChartScreen extends StatelessWidget {
-  const ChartScreen({Key? key}) : super(key: key);
+  ChartScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/login';
+  final expCtrl = Get.put(ExpenseController());
 
   @override
   Widget build(BuildContext context) {

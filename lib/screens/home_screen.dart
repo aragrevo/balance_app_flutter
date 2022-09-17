@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
   final homeCtrl = Get.put(HomeController());
+  final expCtrl = Get.put(ExpenseController());
 
   static const String routeName = '/home';
 
@@ -56,7 +57,7 @@ class _Home extends StatelessWidget {
             children: [
               const _Body(),
               PocketScreen(),
-              const ChartScreen(),
+              ChartScreen(),
               const SizedBox()
             ],
           ),

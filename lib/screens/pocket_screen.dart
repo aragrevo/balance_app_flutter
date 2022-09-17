@@ -97,7 +97,7 @@ class PocketScreen extends StatelessWidget {
                               height: 5,
                               width: 50,
                               decoration: BoxDecoration(
-                                color: Colors.indigoAccent.withOpacity(0.5),
+                                color: Colors.indigoAccent.withOpacity(0.4),
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(8)),
                               ),
@@ -204,11 +204,32 @@ class _PocketList extends StatelessWidget {
         itemCount: pockets.length,
         itemBuilder: (context, index) {
           final pocket = pockets[index];
-          return _CustomCard(
-              title: pocket.name,
-              subtitle: toCurrency(pocket.value),
-              observation: pocket.location,
-              icon: pocketIcons[pocket.location.toLowerCase()] ?? Icons.alarm);
+          return GestureDetector(
+            onTap: () {
+              PocketController.to.resetForm();
+              Get.defaultDialog(
+                  title: pocket.name,
+                  middleText: toCurrency(pocket.value),
+                  content: _ContentDialog(
+                    pocket: pocket,
+                    isWallet: false,
+                  ),
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () {
+                        PocketController.to.savePocket(pocket);
+                      },
+                      child: const Text('Save'),
+                    )
+                  ]);
+            },
+            child: _CustomCard(
+                title: pocket.name,
+                subtitle: toCurrency(pocket.value),
+                observation: pocket.location,
+                icon:
+                    pocketIcons[pocket.location.toLowerCase()] ?? Icons.alarm),
+          );
         });
   }
 }
@@ -238,9 +259,19 @@ class _WalletsSection extends StatelessWidget {
                           value: balance?['value'] ?? 0, name: 'Should be')),
                   _WalletState(wallet: Wallet(name: 'Have', value: total)),
                   _WalletState(wallet: Wallet(name: 'Overage', value: overage)),
-                  const SizedBox(
+                  Container(
                     width: 100,
                     height: 100,
+                    padding: const EdgeInsets.all(24),
+                    child: FloatingActionButton(
+                        tooltip: 'Add pocket',
+                        child: const Icon(
+                          Icons.add,
+                          color: Color(0xff77839a),
+                        ),
+                        elevation: 2,
+                        backgroundColor: Colors.white,
+                        onPressed: () {}),
                   )
                 ],
               ),
@@ -259,37 +290,6 @@ class _WalletsSection extends StatelessWidget {
   }
 }
 
-class _CustomRow extends StatelessWidget {
-  const _CustomRow({
-    Key? key,
-    required this.title,
-    required this.amount,
-  }) : super(key: key);
-
-  final String title;
-  final String amount;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.zero,
-      // padding: const EdgeInsets.all(2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title.toCapitalize,
-              style: const TextStyle(
-                  color: Color(0xff2B322F),
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold)),
-          Text(amount,
-              style: const TextStyle(color: Color(0xff77839a), fontSize: 11)),
-        ],
-      ),
-    );
-  }
-}
-
 class _WalletWidget extends StatelessWidget {
   const _WalletWidget({
     Key? key,
@@ -302,12 +302,146 @@ class _WalletWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print(wallet.name);
+        Get.defaultDialog(
+            title: wallet.name,
+            middleText: toCurrency(wallet.value),
+            content: _ContentDialog(
+              wallet: wallet,
+              isWallet: true,
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  BalanceController.to.saveWallet(wallet);
+                },
+                child: const Text('Save'),
+              )
+            ]);
       },
       child: _CustomCard(
         icon: walletIcons[wallet.icon]!,
         subtitle: toCurrency(wallet.value),
         title: wallet.name,
+      ),
+    );
+  }
+}
+
+class _ContentDialog extends StatelessWidget {
+  const _ContentDialog(
+      {Key? key, this.wallet, this.pocket, required this.isWallet})
+      : super(key: key);
+
+  final Wallet? wallet;
+  final Pocket? pocket;
+  final bool isWallet;
+
+  @override
+  Widget build(BuildContext context) {
+    PocketController.to.restOfBalance.value = pocket?.restOfBalance ?? false;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Previous value'),
+              Text(toCurrency(isWallet ? wallet!.value : pocket!.value)),
+            ],
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Obx(() => PocketController.to.isUpdating.value
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Update value'),
+                    Text(PocketController.to.updateValue.value),
+                  ],
+                )
+              : const SizedBox()),
+          const SizedBox(
+            height: 10,
+          ),
+          Obx(() => TextFormField(
+                initialValue: isWallet
+                    ? BalanceController.to.newValue.value
+                    : PocketController.to.newValue.value,
+                onChanged: (value) {
+                  isWallet
+                      ? BalanceController.to.newValue.value = value
+                      : PocketController.to.newValue.value = value;
+                },
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'New value',
+                  suffixIcon: Icon(isWallet
+                      ? walletIcons[wallet!.icon]
+                      : pocketIcons[pocket!.location]),
+                ),
+                validator: (value) {
+                  if (value == null) {
+                    return 'Por favor ingrese un monto';
+                  }
+                },
+              )),
+          if (isWallet == false)
+            Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    const Text('Rest of balance? : '),
+                    Obx(() {
+                      return Switch(
+                        value: PocketController.to.restOfBalance.value,
+                        onChanged: (value) {
+                          PocketController.to.restOfBalance.value = value;
+                        },
+                      );
+                    }),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.indigoAccent,
+                      child: IconButton(
+                        icon: const Icon(Icons.add),
+                        color: Colors.white,
+                        onPressed: () {
+                          PocketController.to
+                              .updatePocketValue(pocket!, Operation.sum);
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    CircleAvatar(
+                      backgroundColor: Colors.orangeAccent,
+                      child: IconButton(
+                        color: Colors.white,
+                        icon: const Icon(Icons.remove),
+                        onPressed: () {
+                          PocketController.to
+                              .updatePocketValue(pocket!, Operation.rest);
+                        },
+                      ),
+                    )
+                  ],
+                )
+              ],
+            )
+        ],
       ),
     );
   }

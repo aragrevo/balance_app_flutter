@@ -4,6 +4,7 @@ Map<String, Icon> customIcons = {
   'Mobile': const Icon(Icons.phone_android),
   'Groocery': const Icon(Icons.local_grocery_store_outlined),
   'Apartment': const Icon(Icons.apartment),
+  'Apartment_fee': const Icon(Icons.apartment),
   'Save': const Icon(Icons.monetization_on_outlined),
   'Meat': const Icon(Icons.food_bank_outlined),
   'Parking': const Icon(Icons.local_parking_outlined),
@@ -14,6 +15,7 @@ Map<String, Icon> customIcons = {
   'Light': const Icon(Icons.light_outlined),
   'Gas': const Icon(Icons.outdoor_grill_sharp),
   'Tv': const Icon(Icons.tv_outlined),
+  'Admin': const Icon(Icons.admin_panel_settings_rounded),
 };
 
 Map<String, IconData> walletIcons = {
@@ -28,5 +30,6 @@ Map<String, IconData> pocketIcons = {
   'pocket': Icons.gite_sharp,
   'tyba': Icons.donut_large,
   'littio': Icons.currency_exchange_rounded,
-  'airtm': Icons.currency_bitcoin_rounded
+  'airtm': Icons.currency_bitcoin_rounded,
+  'sosty': Icons.cruelty_free_rounded
 };

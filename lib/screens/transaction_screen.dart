@@ -1,6 +1,8 @@
 import 'package:balance_app/controllers/balance.controller.dart';
 import 'package:balance_app/controllers/category.controller.dart';
 import 'package:balance_app/controllers/expense.controller.dart';
+import 'package:balance_app/utils/format.dart';
+import 'package:balance_app/utils/icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -84,7 +86,23 @@ class _Form extends StatelessWidget {
                 },
                 items: CategoryController.to.categories
                     .map((category) => DropdownMenuItem(
-                          child: Text(category['name']),
+                          child: Row(
+                            // color: Color(0xff77839a),
+                            children: [
+                              Container(
+                                child: customIcons[category['id']
+                                        .toString()
+                                        .toCapitalize] ??
+                                    const Icon(Icons.accessibility_new),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                category['name'],
+                              ),
+                            ],
+                          ),
                           value: category['id'],
                         ))
                     .toList(),

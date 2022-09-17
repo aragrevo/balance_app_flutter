@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:balance_app/models/wallet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class BalanceService {
@@ -22,6 +24,7 @@ class BalanceService {
       List<Wallet> retVal = [];
       query.docs.forEach((doc) {
         final wallet = doc.data() as Map<String, dynamic>;
+        wallet['id'] = doc.id;
         if (wallet['name'] != null) {
           retVal.add(Wallet.fromJson(wallet));
         }
@@ -42,5 +45,17 @@ class BalanceService {
     final monthName = DateFormat.MMMM().format(DateTime.now());
     final year = DateTime.now().year;
     return monthName.toLowerCase() + year.toString();
+  }
+
+  Future<bool> saveBalance(String id, Wallet data) async {
+    final CollectionReference instance =
+        FirebaseFirestore.instance.collection('balance');
+    try {
+      await instance.doc(id).set(data.toJson());
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
   }
 }
