@@ -14,6 +14,10 @@ class PocketController extends GetxController {
   final restOfBalance = false.obs;
   final isUpdating = false.obs;
 
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+
   List<Pocket> get pocket => _pocket.value;
   List<Pocket> get pocketRest {
     return _getPockets(true);
@@ -51,13 +55,6 @@ class PocketController extends GetxController {
     _pocketSave.bindStream(PocketService().pocketStream());
   }
 
-  void resetForm() {
-    newValue.value = '';
-    updateValue.value = '';
-    restOfBalance.value = false;
-    isUpdating.value = false;
-  }
-
   List<Pocket> _getPockets(bool type) {
     final pockets =
         pocket.where((element) => element.restOfBalance == type).toList();
@@ -72,7 +69,7 @@ class PocketController extends GetxController {
 
   Future<void> savePocket(Pocket pocket) async {
     if (newValue.value.isEmpty && isUpdating.value == false) {
-      Get.snackbar('Error', 'Can not be empty',
+      Get.snackbar('Error', 'Value can not be empty',
           backgroundColor: Colors.yellowAccent.withOpacity(0.5));
       return;
     }
@@ -80,6 +77,8 @@ class PocketController extends GetxController {
         updateValue.value.isNotEmpty ? updateValue.value : newValue.value;
     pocket.value = int.parse(value);
     pocket.restOfBalance = restOfBalance.value;
+    pocket.name = titleController.text;
+    pocket.location = locationController.text;
     final saved = await PocketService().savePocket(pocket.id!, pocket);
     if (saved) {
       Get.back();
@@ -88,7 +87,7 @@ class PocketController extends GetxController {
 
   void updatePocketValue(Pocket pocket, Operation operation) {
     if (newValue.value.isEmpty) {
-      Get.snackbar('Error', 'Can not be empty',
+      Get.snackbar('Error', 'Value can not be empty',
           backgroundColor: Colors.yellowAccent.withOpacity(0.5));
       return;
     }
@@ -106,6 +105,18 @@ class PocketController extends GetxController {
 
     isUpdating.value = true;
     newValue.value = '';
+  }
+
+  bool isValidForm() {
+    return formKey.currentState?.validate() ?? false;
+  }
+
+  void resetForm() {
+    newValue.value = '';
+    updateValue.value = '';
+    restOfBalance.value = false;
+    isUpdating.value = false;
+    formKey.currentState?.reset();
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:balance_app/models/pocket.dart';
 import 'package:balance_app/models/wallet.dart';
 import 'package:balance_app/utils/format.dart';
 import 'package:balance_app/utils/icons.dart';
+import 'package:balance_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -207,21 +208,13 @@ class _PocketList extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               PocketController.to.resetForm();
-              Get.defaultDialog(
-                  title: pocket.name,
-                  middleText: toCurrency(pocket.value),
-                  content: _ContentDialog(
-                    pocket: pocket,
-                    isWallet: false,
-                  ),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () {
-                        PocketController.to.savePocket(pocket);
-                      },
-                      child: const Text('Save'),
-                    )
-                  ]);
+              Get.bottomSheet(PocketForm(pocket: pocket),
+                  isScrollControlled: true,
+                  backgroundColor: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16))));
             },
             child: _CustomCard(
                 title: pocket.name,
@@ -305,9 +298,8 @@ class _WalletWidget extends StatelessWidget {
         Get.defaultDialog(
             title: wallet.name,
             middleText: toCurrency(wallet.value),
-            content: _ContentDialog(
+            content: WalletDialog(
               wallet: wallet,
-              isWallet: true,
             ),
             actions: [
               ElevatedButton(
@@ -322,126 +314,6 @@ class _WalletWidget extends StatelessWidget {
         icon: walletIcons[wallet.icon]!,
         subtitle: toCurrency(wallet.value),
         title: wallet.name,
-      ),
-    );
-  }
-}
-
-class _ContentDialog extends StatelessWidget {
-  const _ContentDialog(
-      {Key? key, this.wallet, this.pocket, required this.isWallet})
-      : super(key: key);
-
-  final Wallet? wallet;
-  final Pocket? pocket;
-  final bool isWallet;
-
-  @override
-  Widget build(BuildContext context) {
-    PocketController.to.restOfBalance.value = pocket?.restOfBalance ?? false;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Previous value'),
-              Text(toCurrency(isWallet ? wallet!.value : pocket!.value)),
-            ],
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Obx(() => PocketController.to.isUpdating.value
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Update value'),
-                    Text(PocketController.to.updateValue.value),
-                  ],
-                )
-              : const SizedBox()),
-          const SizedBox(
-            height: 10,
-          ),
-          Obx(() => TextFormField(
-                initialValue: isWallet
-                    ? BalanceController.to.newValue.value
-                    : PocketController.to.newValue.value,
-                onChanged: (value) {
-                  isWallet
-                      ? BalanceController.to.newValue.value = value
-                      : PocketController.to.newValue.value = value;
-                },
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'New value',
-                  suffixIcon: Icon(isWallet
-                      ? walletIcons[wallet!.icon]
-                      : pocketIcons[pocket!.location]),
-                ),
-                validator: (value) {
-                  if (value == null) {
-                    return 'Por favor ingrese un monto';
-                  }
-                },
-              )),
-          if (isWallet == false)
-            Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    const Text('Rest of balance? : '),
-                    Obx(() {
-                      return Switch(
-                        value: PocketController.to.restOfBalance.value,
-                        onChanged: (value) {
-                          PocketController.to.restOfBalance.value = value;
-                        },
-                      );
-                    }),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.indigoAccent,
-                      child: IconButton(
-                        icon: const Icon(Icons.add),
-                        color: Colors.white,
-                        onPressed: () {
-                          PocketController.to
-                              .updatePocketValue(pocket!, Operation.sum);
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    CircleAvatar(
-                      backgroundColor: Colors.orangeAccent,
-                      child: IconButton(
-                        color: Colors.white,
-                        icon: const Icon(Icons.remove),
-                        onPressed: () {
-                          PocketController.to
-                              .updatePocketValue(pocket!, Operation.rest);
-                        },
-                      ),
-                    )
-                  ],
-                )
-              ],
-            )
-        ],
       ),
     );
   }
