@@ -24,11 +24,25 @@ class PocketService {
     });
   }
 
-  Future<bool> savePocket(String id, Pocket data) async {
+  Future<bool> savePocket(String? id, Pocket data) async {
     final CollectionReference instance =
         FirebaseFirestore.instance.collection('pockets');
     try {
-      await instance.doc(id).set(data.toJson());
+      (id == null || id.isEmpty)
+          ? await instance.add(data.toJson())
+          : await instance.doc(id).set(data.toJson());
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
+    }
+  }
+
+  Future<bool> deletePocket(String id, Pocket data) async {
+    final CollectionReference instance =
+        FirebaseFirestore.instance.collection('pockets');
+    try {
+      await instance.doc(id).delete();
       return true;
     } catch (e) {
       Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);

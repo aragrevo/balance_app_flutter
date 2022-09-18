@@ -2,6 +2,7 @@ import 'package:balance_app/controllers/pocket.controller.dart';
 import 'package:balance_app/models/pocket.dart';
 import 'package:balance_app/utils/format.dart';
 import 'package:balance_app/utils/icons.dart';
+import 'package:balance_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,10 +27,10 @@ class PocketForm extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              pocket.name,
+              pocket.name.isEmpty ? 'New pocket' : pocket.name,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            const _Spacer(10),
+            const CustomSpacer(10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -37,7 +38,7 @@ class PocketForm extends StatelessWidget {
                 Text(toCurrency(pocket.value)),
               ],
             ),
-            const _Spacer(10),
+            const CustomSpacer(10),
             Obx(() => PocketController.to.isUpdating.value
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,14 +48,14 @@ class PocketForm extends StatelessWidget {
                     ],
                   )
                 : const SizedBox()),
-            const _Spacer(10),
+            const CustomSpacer(10),
             const Divider(),
-            const _Spacer(10),
+            const CustomSpacer(10),
             TextFormField(
               controller: PocketController.to.titleController,
               keyboardType: TextInputType.text,
               decoration: const InputDecoration(
-                labelText: 'Edit title',
+                labelText: 'Title',
                 suffixIcon: Icon(Icons.title_rounded),
               ),
               validator: (value) {
@@ -63,12 +64,12 @@ class PocketForm extends StatelessWidget {
                 }
               },
             ),
-            const _Spacer(10),
+            const CustomSpacer(10),
             TextFormField(
               controller: PocketController.to.locationController,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                labelText: 'Edit location',
+                labelText: 'Location',
                 suffixIcon: Icon(pocketIcons[pocket.location]),
               ),
               validator: (value) {
@@ -77,7 +78,7 @@ class PocketForm extends StatelessWidget {
                 }
               },
             ),
-            const _Spacer(10),
+            const CustomSpacer(10),
             Obx(() => TextFormField(
                   initialValue: PocketController.to.newValue.value,
                   onChanged: (value) =>
@@ -88,7 +89,7 @@ class PocketForm extends StatelessWidget {
                     suffixIcon: Icon(Icons.attach_money),
                   ),
                 )),
-            const _Spacer(10),
+            const CustomSpacer(10),
             Row(
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -124,23 +125,11 @@ class PocketForm extends StatelessWidget {
               },
               child: const Text('Save'),
             ),
-            const _Spacer(10),
+            const CustomSpacer(10),
           ],
         ),
       ),
       // ),
-    );
-  }
-}
-
-class _Spacer extends StatelessWidget {
-  const _Spacer(this.height);
-
-  final double height;
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
     );
   }
 }

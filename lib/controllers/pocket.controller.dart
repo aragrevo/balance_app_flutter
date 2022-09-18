@@ -13,6 +13,7 @@ class PocketController extends GetxController {
   final RxString updateValue = ''.obs;
   final restOfBalance = false.obs;
   final isUpdating = false.obs;
+  final Rx<Pocket?> pocketToDelete = Rx<Pocket?>(null);
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController titleController = TextEditingController();
@@ -79,7 +80,7 @@ class PocketController extends GetxController {
     pocket.restOfBalance = restOfBalance.value;
     pocket.name = titleController.text;
     pocket.location = locationController.text;
-    final saved = await PocketService().savePocket(pocket.id!, pocket);
+    final saved = await PocketService().savePocket(pocket.id, pocket);
     if (saved) {
       Get.back();
     }

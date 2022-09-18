@@ -2,6 +2,7 @@ import 'package:balance_app/controllers/balance.controller.dart';
 import 'package:balance_app/controllers/pocket.controller.dart';
 import 'package:balance_app/models/pocket.dart';
 import 'package:balance_app/models/wallet.dart';
+import 'package:balance_app/services/pocket.service.dart';
 import 'package:balance_app/utils/format.dart';
 import 'package:balance_app/utils/icons.dart';
 import 'package:balance_app/widgets/widgets.dart';
@@ -207,6 +208,7 @@ class _PocketList extends StatelessWidget {
           final pocket = pockets[index];
           return GestureDetector(
             onTap: () {
+              PocketController.to.pocketToDelete.value = null;
               PocketController.to.resetForm();
               Get.bottomSheet(PocketForm(pocket: pocket),
                   isScrollControlled: true,
@@ -216,12 +218,38 @@ class _PocketList extends StatelessWidget {
                           topLeft: Radius.circular(16),
                           topRight: Radius.circular(16))));
             },
-            child: _CustomCard(
-                title: pocket.name,
-                subtitle: toCurrency(pocket.value),
-                observation: pocket.location,
-                icon:
-                    pocketIcons[pocket.location.toLowerCase()] ?? Icons.alarm),
+            onLongPress: () {
+              PocketController.to.pocketToDelete.value =
+                  (PocketController.to.pocketToDelete.value?.id == pocket.id)
+                      ? null
+                      : PocketController.to.pocketToDelete.value = pocket;
+            },
+            child: Obx(() {
+              return Stack(
+                children: [
+                  _CustomCard(
+                      title: pocket.name,
+                      subtitle: toCurrency(pocket.value),
+                      isNegative: pocket.value < 0,
+                      observation: pocket.location,
+                      icon: pocketIcons[pocket.location.toLowerCase()] ??
+                          Icons.alarm),
+                  if (PocketController.to.pocketToDelete.value?.id == pocket.id)
+                    Positioned(
+                      top: -10,
+                      right: -10,
+                      child: IconButton(
+                          iconSize: 30,
+                          color: Colors.red,
+                          onPressed: () async {
+                            await PocketService()
+                                .deletePocket(pocket.id!, pocket);
+                          },
+                          icon: const Icon(Icons.cancel_rounded)),
+                    ),
+                ],
+              );
+            }),
           );
         });
   }
@@ -243,6 +271,8 @@ class _WalletsSection extends StatelessWidget {
             final total = BalanceController.to.wallet
                 .fold<int>(0, (prev, element) => prev + element.value);
             final int overage = total - (balance?['value'] ?? 0) as int;
+            final int diff = PocketController.to.totalPocketRest - overage;
+            final bool isNegative = diff < 0;
             return Column(children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -252,25 +282,63 @@ class _WalletsSection extends StatelessWidget {
                           value: balance?['value'] ?? 0, name: 'Should be')),
                   _WalletState(wallet: Wallet(name: 'Have', value: total)),
                   _WalletState(wallet: Wallet(name: 'Overage', value: overage)),
-                  Container(
+                  SizedBox(
                     width: 100,
                     height: 100,
-                    padding: const EdgeInsets.all(24),
-                    child: FloatingActionButton(
-                        tooltip: 'Add pocket',
-                        child: const Icon(
-                          Icons.add,
-                          color: Color(0xff77839a),
-                        ),
-                        elevation: 2,
-                        backgroundColor: Colors.white,
-                        onPressed: () {}),
+                    child: Column(
+                      children: [
+                        Card(
+                            color: (isNegative)
+                                ? Colors.redAccent.withOpacity(0.3)
+                                : const Color.fromRGBO(249, 249, 249, 1),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 4),
+                              child: Column(
+                                children: [
+                                  FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(
+                                      toCurrency(diff),
+                                      style: const TextStyle(
+                                          color: Color(0xff77839a),
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        const CustomSpacer(5),
+                        FloatingActionButton(
+                            tooltip: 'Add pocket',
+                            child: const Icon(
+                              Icons.add,
+                              color: Color(0xff77839a),
+                            ),
+                            elevation: 2,
+                            backgroundColor: Colors.white,
+                            onPressed: () {
+                              PocketController.to.resetForm();
+                              Get.bottomSheet(
+                                  PocketForm(
+                                      pocket: Pocket(
+                                          value: 0,
+                                          name: '',
+                                          location: '',
+                                          restOfBalance: false)),
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.white,
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16))));
+                            }),
+                      ],
+                    ),
                   )
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const CustomSpacer(16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: BalanceController.to.wallet
@@ -325,6 +393,7 @@ class _CustomCard extends StatelessWidget {
       required this.title,
       required this.subtitle,
       required this.icon,
+      this.isNegative = false,
       this.observation})
       : super(key: key);
 
@@ -332,10 +401,14 @@ class _CustomCard extends StatelessWidget {
   final String subtitle;
   final String? observation;
   final IconData icon;
+  final bool isNegative;
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: (isNegative)
+          ? Colors.redAccent.withOpacity(0.3)
+          : const Color.fromRGBO(249, 249, 249, 1),
       child: Container(
           width: 100,
           padding: const EdgeInsets.all(16),
