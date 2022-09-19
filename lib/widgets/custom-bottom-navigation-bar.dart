@@ -60,7 +60,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 child: IconButton(
                   color: Colors.black12,
                   icon: const Icon(Icons.settings_outlined),
-                  onPressed: () {},
+                  onPressed: () {
+                    HomeController.to.openSettingsDrawer();
+                  },
                 ),
               ),
             ],

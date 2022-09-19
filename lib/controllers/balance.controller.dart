@@ -1,5 +1,7 @@
+import 'package:balance_app/controllers/pocket.controller.dart';
 import 'package:balance_app/models/wallet.dart';
 import 'package:balance_app/services/balance.service.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BalanceController extends GetxController {
@@ -8,6 +10,8 @@ class BalanceController extends GetxController {
   final RxList<Wallet> _wallet = RxList<Wallet>();
 
   final RxString newValue = ''.obs;
+  final RxString updateValue = ''.obs;
+  final isUpdating = false.obs;
 
   Map<String, dynamic> get balance => _balance.value;
   List<Wallet> get wallet => _wallet.value;
@@ -20,14 +24,46 @@ class BalanceController extends GetxController {
   }
 
   Future<void> saveWallet(Wallet wallet) async {
-    if (newValue.value.isEmpty) {
-      Get.snackbar('Error', 'Can not be empty');
+    if (newValue.value.isEmpty && isUpdating.value == false) {
+      Get.snackbar('Error', 'Value can not be empty',
+          backgroundColor: Colors.yellowAccent.withOpacity(0.5));
       return;
     }
-    wallet.value = int.parse(newValue.value);
+    final value =
+        updateValue.value.isNotEmpty ? updateValue.value : newValue.value;
+    wallet.value = int.parse(value);
     final saved = await BalanceService().saveBalance(wallet.id!, wallet);
     if (saved) {
       Get.back();
     }
+  }
+
+  void updatePocketValue(Wallet wallet, Operation operation) {
+    if (newValue.value.isEmpty) {
+      Get.snackbar('Error', 'Value can not be empty',
+          backgroundColor: Colors.yellowAccent.withOpacity(0.5));
+      return;
+    }
+
+    switch (operation) {
+      case Operation.sum:
+        updateValue.value =
+            (wallet.value + int.parse(newValue.value)).toString();
+        break;
+      case Operation.rest:
+        updateValue.value =
+            (wallet.value - int.parse(newValue.value)).toString();
+        break;
+    }
+
+    isUpdating.value = true;
+    newValue.value = '';
+  }
+
+  void resetForm() {
+    newValue.value = '';
+    updateValue.value = '';
+    isUpdating.value = false;
+    // formKey.currentState?.reset();
   }
 }

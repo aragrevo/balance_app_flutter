@@ -16,6 +16,16 @@ class BalanceService {
     });
   }
 
+  Stream<List<String>> dataStream() {
+    return _firestore.collection('data').snapshots().map((QuerySnapshot query) {
+      List<String> retVal = [];
+      query.docs.forEach((doc) {
+        retVal.add(doc.id);
+      });
+      return retVal;
+    });
+  }
+
   Stream<List<Wallet>> walletStream() {
     return _firestore
         .collection('balance')

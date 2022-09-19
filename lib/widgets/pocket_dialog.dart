@@ -44,7 +44,7 @@ class PocketForm extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Update value'),
-                      Text(PocketController.to.updateValue.value),
+                      Text(toCurrency(PocketController.to.updateValue.value)),
                     ],
                   )
                 : const SizedBox()),
@@ -103,15 +103,17 @@ class PocketForm extends StatelessWidget {
                   );
                 }),
                 const Expanded(child: SizedBox()),
-                _OperationButton(
-                  pocket: pocket,
+                OperationButton(
+                  onPressed: () => PocketController.to
+                      .updatePocketValue(pocket, Operation.sum),
                   operation: Operation.sum,
                 ),
                 const SizedBox(
                   width: 20,
                 ),
-                _OperationButton(
-                  pocket: pocket,
+                OperationButton(
+                  onPressed: () => PocketController.to
+                      .updatePocketValue(pocket, Operation.rest),
                   operation: Operation.rest,
                 ),
               ],
@@ -130,32 +132,6 @@ class PocketForm extends StatelessWidget {
         ),
       ),
       // ),
-    );
-  }
-}
-
-class _OperationButton extends StatelessWidget {
-  const _OperationButton({
-    Key? key,
-    required this.pocket,
-    required this.operation,
-  }) : super(key: key);
-
-  final Pocket pocket;
-  final Operation operation;
-
-  @override
-  Widget build(BuildContext context) {
-    final bool isSum = operation == Operation.sum;
-    return CircleAvatar(
-      backgroundColor: isSum ? Colors.indigoAccent : Colors.orangeAccent,
-      child: IconButton(
-        icon: Icon(isSum ? Icons.add : Icons.remove),
-        color: Colors.white,
-        onPressed: () {
-          PocketController.to.updatePocketValue(pocket, operation);
-        },
-      ),
     );
   }
 }

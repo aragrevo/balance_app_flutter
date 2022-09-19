@@ -11,6 +11,9 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
+// TODO: Search functionality
+// TODO: Edit expense
+
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
   final homeCtrl = Get.put(HomeController());
@@ -31,6 +34,7 @@ class _Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: HomeController.to.scaffoldKey,
         extendBody: true,
         appBar: AppBar(
             backgroundColor: const Color(0xff2c4260),
@@ -38,6 +42,7 @@ class _Home extends StatelessWidget {
                 color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
             elevation: 0,
             leading: const _Avatar(),
+            actions: const [SizedBox()],
             title: const Text('Balance App')),
         floatingActionButton: FloatingActionButton(
           heroTag: 'btn-home',
@@ -51,6 +56,10 @@ class _Home extends StatelessWidget {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: const CustomBottomNavigationBar(),
+        endDrawer: Theme(
+            data: Theme.of(context).copyWith(canvasColor: Colors.redAccent),
+            child: const SettingsDrawer()),
+        endDrawerEnableOpenDragGesture: false,
         body: Obx(
           () => IndexedStack(
             index: HomeController.to.currentIndex.value,

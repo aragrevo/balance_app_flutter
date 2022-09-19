@@ -5,10 +5,14 @@ import 'package:balance_app/utils/format.dart';
 import 'package:balance_app/utils/icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 import 'package:balance_app/models/expense.dart';
 import 'package:balance_app/services/balance.service.dart';
+
+// TODO: Add animated svg
+// TODO: Add field observations
+// TODO: Save type income
+// TODO: Add icons to income
 
 class TransactionScreen extends StatelessWidget {
   TransactionScreen({Key? key}) : super(key: key);

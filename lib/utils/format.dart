@@ -1,6 +1,10 @@
 import 'package:intl/intl.dart';
 
 String toCurrency(dynamic value) {
+  if (value == null || value == '') return value;
+  if (value is String) {
+    value = int.parse(value);
+  }
   return NumberFormat.currency(locale: 'en_US', symbol: '\$', decimalDigits: 0)
       .format(value);
 }

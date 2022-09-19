@@ -5,6 +5,7 @@ import 'package:balance_app/models/wallet.dart';
 import 'package:balance_app/services/pocket.service.dart';
 import 'package:balance_app/utils/format.dart';
 import 'package:balance_app/utils/icons.dart';
+import 'package:balance_app/utils/theme_colors.dart';
 import 'package:balance_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,14 +29,14 @@ class PocketScreen extends StatelessWidget {
             child: Card(
               child: ListTile(
                 leading: const Icon(Icons.savings_rounded),
-                title: const Text('Total I have',
+                title: Text('Total I have',
                     style: TextStyle(
-                      color: Color(0xff2B322F),
+                      color: ThemeColors.to.black,
                     )),
                 trailing: Text(
                   toCurrency(PocketController.to.totalPockets),
-                  style: const TextStyle(
-                      color: Color(0xff2B322F),
+                  style: TextStyle(
+                      color: ThemeColors.to.black,
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
                 ),
@@ -81,6 +82,7 @@ class PocketScreen extends StatelessWidget {
                       ScrollController scrollController) {
                     final list =
                         PocketController.to.balanceInWallets.entries.toList();
+                    list.sort(((a, b) => b.value.compareTo(a.value)));
                     return Container(
                       decoration: const BoxDecoration(
                         color: Colors.white,
@@ -116,13 +118,13 @@ class PocketScreen extends StatelessWidget {
                                       leading: Icon(
                                           pocketIcons[item.key.toLowerCase()]),
                                       title: Text(item.key.toCapitalize,
-                                          style: const TextStyle(
-                                            color: Color(0xff2B322F),
+                                          style: TextStyle(
+                                            color: ThemeColors.to.black,
                                           )),
                                       trailing: Text(
                                         toCurrency(item.value),
-                                        style: const TextStyle(
-                                            color: Color(0xff2B322F),
+                                        style: TextStyle(
+                                            color: ThemeColors.to.black,
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -271,7 +273,7 @@ class _WalletsSection extends StatelessWidget {
             final total = BalanceController.to.wallet
                 .fold<int>(0, (prev, element) => prev + element.value);
             final int overage = total - (balance?['value'] ?? 0) as int;
-            final int diff = PocketController.to.totalPocketRest - overage;
+            final int diff = overage - PocketController.to.totalPocketRest;
             final bool isNegative = diff < 0;
             return Column(children: [
               Row(
@@ -290,7 +292,7 @@ class _WalletsSection extends StatelessWidget {
                         Card(
                             color: (isNegative)
                                 ? Colors.redAccent.withOpacity(0.3)
-                                : const Color.fromRGBO(249, 249, 249, 1),
+                                : ThemeColors.to.backgroundCard,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 4),
@@ -300,8 +302,8 @@ class _WalletsSection extends StatelessWidget {
                                     fit: BoxFit.contain,
                                     child: Text(
                                       toCurrency(diff),
-                                      style: const TextStyle(
-                                          color: Color(0xff77839a),
+                                      style: TextStyle(
+                                          color: ThemeColors.to.darkgray,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
@@ -311,9 +313,9 @@ class _WalletsSection extends StatelessWidget {
                         const CustomSpacer(5),
                         FloatingActionButton(
                             tooltip: 'Add pocket',
-                            child: const Icon(
+                            child: Icon(
                               Icons.add,
-                              color: Color(0xff77839a),
+                              color: ThemeColors.to.darkgray,
                             ),
                             elevation: 2,
                             backgroundColor: Colors.white,
@@ -363,6 +365,7 @@ class _WalletWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        BalanceController.to.resetForm();
         Get.defaultDialog(
             title: wallet.name,
             middleText: toCurrency(wallet.value),
@@ -408,7 +411,7 @@ class _CustomCard extends StatelessWidget {
     return Card(
       color: (isNegative)
           ? Colors.redAccent.withOpacity(0.3)
-          : const Color.fromRGBO(249, 249, 249, 1),
+          : ThemeColors.to.backgroundCard,
       child: Container(
           width: 100,
           padding: const EdgeInsets.all(16),
@@ -417,15 +420,15 @@ class _CustomCard extends StatelessWidget {
               Icon(
                 icon,
                 size: 38,
-                color: const Color(0xff77839a),
+                color: ThemeColors.to.darkgray,
               ),
               const SizedBox(height: 5),
               FittedBox(
                 fit: BoxFit.contain,
                 child: Text(
                   title,
-                  style: const TextStyle(
-                      color: Color(0xff2B322F), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: ThemeColors.to.black, fontWeight: FontWeight.bold),
                 ),
               ),
               FittedBox(
@@ -433,7 +436,7 @@ class _CustomCard extends StatelessWidget {
                 child: Text(
                   subtitle,
                   style:
-                      const TextStyle(color: Color(0xff77839a), fontSize: 12),
+                      TextStyle(color: ThemeColors.to.darkgray, fontSize: 12),
                 ),
               ),
               observation != null
@@ -441,8 +444,8 @@ class _CustomCard extends StatelessWidget {
                       fit: BoxFit.contain,
                       child: Text(
                         observation!,
-                        style: const TextStyle(
-                            color: Color(0xff77839a), fontSize: 12),
+                        style: TextStyle(
+                            color: ThemeColors.to.darkgray, fontSize: 12),
                       ),
                     )
                   : const SizedBox(),
@@ -475,16 +478,16 @@ class _WalletState extends StatelessWidget {
           height: 100,
           decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(7)),
-              border: Border.all(color: const Color(0xff77839a))),
+              border: Border.all(color: ThemeColors.to.darkgray)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 6),
-                decoration: const BoxDecoration(
-                  color: Color(0xff77839a),
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                decoration: BoxDecoration(
+                  color: ThemeColors.to.darkgray,
+                  borderRadius: const BorderRadius.all(Radius.circular(5)),
                 ),
                 child: Center(
                   child: _VerticalText(
