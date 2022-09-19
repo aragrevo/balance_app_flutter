@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 // TODO: Search functionality
-// TODO: Edit expense
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -325,13 +324,9 @@ class _ExpensesList extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (_, int index) {
                       final item = expensesList[index];
-                      final txt = item.observation ?? item.description;
                       return ItemCard(
-                          amount: item.cost,
-                          title: txt,
-                          subtitle: DateFormat()
-                              .add_yMMMEd()
-                              .format(DateTime.parse(item.date)));
+                        item: item,
+                      );
                     }),
           ),
         ),

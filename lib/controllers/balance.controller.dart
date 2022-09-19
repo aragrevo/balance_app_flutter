@@ -1,4 +1,5 @@
 import 'package:balance_app/controllers/pocket.controller.dart';
+import 'package:balance_app/models/expense.dart';
 import 'package:balance_app/models/wallet.dart';
 import 'package:balance_app/services/balance.service.dart';
 import 'package:flutter/material.dart';
@@ -65,5 +66,16 @@ class BalanceController extends GetxController {
     updateValue.value = '';
     isUpdating.value = false;
     // formKey.currentState?.reset();
+  }
+
+  Future<void> updateBalance(Expense data, String type) async {
+    final obj = balance;
+    final currentMonth = BalanceService().getCurrentMonth();
+    final category = type == 'revenue' ? 'revenue' : 'expense';
+    obj[category]['value'] += data.cost;
+    obj[category]['observation'] = data.date;
+    obj['balance']['value'] = obj['revenue']['value'] - obj['expense']['value'];
+    obj['balance']['observation'] = data.date;
+    await BalanceService().saveTotals(currentMonth, obj);
   }
 }

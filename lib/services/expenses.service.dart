@@ -1,5 +1,8 @@
+import 'package:balance_app/controllers/balance.controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:balance_app/models/expense.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ExpensesService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -15,6 +18,7 @@ class ExpensesService {
       List<Expense> retVal = [];
       query.docs.forEach((doc) {
         final expense = doc.data() as Map<String, dynamic>;
+        expense['id'] = doc.id;
         final expenseDate = DateTime.parse(expense['date']);
         if (expenseDate.year == year && expenseDate.month == month) {
           retVal.add(Expense.fromJson(expense));
@@ -45,6 +49,20 @@ class ExpensesService {
     } catch (err) {
       print(err);
       rethrow;
+    }
+  }
+
+  Future<bool> deleteExpense(String id, Expense data) async {
+    final CollectionReference instance =
+        FirebaseFirestore.instance.collection('expenses');
+    try {
+      await instance.doc(id).delete();
+      data.cost = -1 * data.cost;
+      await BalanceController.to.updateBalance(data, 'expense');
+      return true;
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);
+      return false;
     }
   }
 }

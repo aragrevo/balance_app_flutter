@@ -1,18 +1,9 @@
-import 'package:balance_app/controllers/balance.controller.dart';
 import 'package:balance_app/controllers/category.controller.dart';
-import 'package:balance_app/controllers/expense.controller.dart';
 import 'package:balance_app/utils/format.dart';
 import 'package:balance_app/utils/icons.dart';
+import 'package:balance_app/utils/theme_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'package:balance_app/models/expense.dart';
-import 'package:balance_app/services/balance.service.dart';
-
-// TODO: Add animated svg
-// TODO: Add field observations
-// TODO: Save type income
-// TODO: Add icons to income
 
 class TransactionScreen extends StatelessWidget {
   TransactionScreen({Key? key}) : super(key: key);
@@ -32,14 +23,17 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: const Text('Transaction'),
         elevation: 0,
       ),
-      body: Container(
-        padding: const EdgeInsets.all(20),
-        color: Colors.white,
-        child: const _Form(),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          color: Colors.white,
+          child: const _Form(),
+        ),
       ),
     );
   }
@@ -55,8 +49,8 @@ class _Form extends StatelessWidget {
     return Form(
       key: CategoryController.to.formKey,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const Image(image: AssetImage('assets/images/bitcoin_transfer.png')),
           DropdownButtonFormField(
               decoration: const InputDecoration(labelText: 'Type'),
               validator: (value) {
@@ -91,13 +85,13 @@ class _Form extends StatelessWidget {
                 items: CategoryController.to.categories
                     .map((category) => DropdownMenuItem(
                           child: Row(
-                            // color: Color(0xff77839a),
                             children: [
-                              Container(
-                                child: customIcons[category['id']
+                              Icon(
+                                customIcons[category['id']
                                         .toString()
                                         .toCapitalize] ??
-                                    const Icon(Icons.accessibility_new),
+                                    Icons.shopify_rounded,
+                                color: ThemeColors.to.darkgray,
                               ),
                               const SizedBox(
                                 width: 10,
@@ -114,6 +108,30 @@ class _Form extends StatelessWidget {
                   CategoryController.to.category.value = value as String;
                 }),
           ),
+          Obx(
+            () => (CategoryController.to.category.value == 'shop')
+                ? Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        initialValue: CategoryController.to.observation.value,
+                        onChanged: (value) =>
+                            CategoryController.to.observation.value = value,
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                          labelText: 'Observation',
+                          suffixIcon: Icon(Icons.shopping_bag_rounded),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese una observación';
+                          }
+                        },
+                      ),
+                    ],
+                  )
+                : const SizedBox(),
+          ),
           const SizedBox(height: 20),
           Obx(
             () => TextFormField(
@@ -125,7 +143,7 @@ class _Form extends StatelessWidget {
                 suffixIcon: Icon(Icons.attach_money),
               ),
               validator: (value) {
-                if (value == null) {
+                if (value == null || value.isEmpty) {
                   return 'Por favor ingrese un monto';
                 }
               },
@@ -139,39 +157,13 @@ class _Form extends StatelessWidget {
                 height: 55,
                 child: Obx(
                   () => ElevatedButton(
-                    onPressed: ExpenseController.to.isSaving.value
+                    onPressed: CategoryController.to.isSaving.value
                         ? null
                         : () async {
                             if (!CategoryController.to.isValidForm()) return;
-                            if (CategoryController.to.type.value == 'revenue') {
-                              Get.snackbar('Income', 'Do not save this type');
-                              return;
-                            }
-                            final data = Expense(
-                                cost: int.parse(
-                                    CategoryController.to.amount.value),
-                                date: DateTime.now().toIso8601String(),
-                                description:
-                                    CategoryController.to.category.value,
-                                quantity: 1);
-                            final saved =
-                                await ExpenseController.to.saveExpense(data);
-                            if (!saved) return;
-                            final obj = BalanceController.to.balance;
-                            final currentMonth =
-                                BalanceService().getCurrentMonth();
-                            obj['expense']['value'] += data.cost;
-                            obj['expense']['observation'] = data.date;
-                            obj['balance']['value'] = obj['revenue']['value'] -
-                                obj['expense']['value'];
-                            obj['balance']['observation'] = data.date;
-                            await BalanceService()
-                                .saveTotals(currentMonth, obj);
-
-                            Get.back();
-                            Get.snackbar('Saved', 'Save correctly');
+                            await CategoryController.to.saveTransaction();
                           },
-                    child: ExpenseController.to.isSaving.value
+                    child: CategoryController.to.isSaving.value
                         ? const CircularProgressIndicator()
                         : const Text('Add transaction'),
                     style: ElevatedButton.styleFrom(

@@ -8,17 +8,20 @@ Expense expenseFromJson(String str) => Expense.fromJson(json.decode(str));
 String expenseToJson(Expense data) => json.encode(data.toJson());
 
 class Expense {
-  Expense(
-      {required this.cost,
-      required this.date,
-      required this.description,
-      required this.quantity,
-      this.observation});
+  Expense({
+    required this.cost,
+    required this.date,
+    required this.description,
+    required this.quantity,
+    this.observation,
+    this.id,
+  });
   int cost;
   String date;
   String description;
   int quantity;
   String? observation;
+  String? id;
 
   factory Expense.fromJson(Map<String, dynamic> json) => Expense(
         cost: json["cost"],
@@ -26,6 +29,7 @@ class Expense {
         description: json['description'].toString().split("_")[0].toCapitalize,
         quantity: json["quantity"],
         observation: json["observation"],
+        id: json["id"],
       );
 
   Map<String, dynamic> toJson() => {
