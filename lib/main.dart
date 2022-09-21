@@ -1,14 +1,15 @@
+import 'package:balance_app/screens/logs_screen.dart';
 import 'package:balance_app/screens/screens.dart';
 import 'package:balance_app/screens/transaction_screen.dart';
 import 'package:balance_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
-import 'services/balance.service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
@@ -16,7 +17,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
 
@@ -44,6 +45,10 @@ class MyApp extends StatelessWidget {
                 name: TransactionScreen.routeName,
                 page: () => TransactionScreen(),
                 transition: Transition.fadeIn),
+            GetPage(
+                name: LogsScreen.routeName,
+                page: () => LogsScreen(),
+                transition: Transition.leftToRightWithFade),
           ],
           theme: ThemeData.light().copyWith(
             cardTheme: CardTheme(

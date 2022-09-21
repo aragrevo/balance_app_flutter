@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 String toCurrency(dynamic value) {
-  if (value == null || value == '') return value;
+  if (value == null || value == '') return '';
   if (value is String) {
     value = int.parse(value);
   }

@@ -1,4 +1,5 @@
 import 'package:balance_app/controllers/home.controller.dart';
+import 'package:balance_app/screens/logs_screen.dart';
 import 'package:balance_app/services/balance.service.dart';
 import 'package:balance_app/utils/theme_colors.dart';
 import 'package:balance_app/widgets/spacer.dart';
@@ -66,7 +67,9 @@ class SettingsDrawer extends StatelessWidget {
                         ),
                         ListTile(
                           title: const Text('See logs'),
-                          onTap: () {},
+                          onTap: () {
+                            Get.toNamed(LogsScreen.routeName);
+                          },
                           leading: const Icon(Icons.list_rounded),
                         )
                       ],

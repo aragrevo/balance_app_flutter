@@ -1,3 +1,5 @@
+import 'package:balance_app/models/log.dart';
+import 'package:balance_app/services/log.service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,6 +47,14 @@ class ExpenseController extends GetxController {
     isSaving.value = true;
     try {
       await ExpensesService().addExpense(expense);
+      final log = Log(
+        value: expense.cost,
+        name: expense.description,
+        location: expense.description,
+        date: expense.date,
+        type: 'expense',
+      );
+      LogService().saveLog(log);
       return true;
     } catch (e) {
       Get.defaultDialog(title: 'Error', content: Text(e.toString()));

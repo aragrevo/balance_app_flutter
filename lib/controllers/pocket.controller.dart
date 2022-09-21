@@ -1,4 +1,6 @@
+import 'package:balance_app/models/log.dart';
 import 'package:balance_app/models/pocket.dart';
+import 'package:balance_app/services/log.service.dart';
 import 'package:balance_app/services/pocket.service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -76,12 +78,21 @@ class PocketController extends GetxController {
     }
     final value =
         updateValue.value.isNotEmpty ? updateValue.value : newValue.value;
+    final previousValue = pocket.value;
     pocket.value = int.parse(value);
     pocket.restOfBalance = restOfBalance.value;
     pocket.name = titleController.text;
     pocket.location = locationController.text;
     final saved = await PocketService().savePocket(pocket.id, pocket);
     if (saved) {
+      final log = Log(
+          value: pocket.value - previousValue,
+          name: pocket.name,
+          location: pocket.location,
+          date: DateTime.now().toIso8601String(),
+          type: 'pocket',
+          previousValue: previousValue);
+      LogService().saveLog(log);
       Get.back();
     }
   }

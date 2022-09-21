@@ -75,8 +75,9 @@ class ItemCard extends StatelessWidget {
                 WidgetsBinding.instance?.addPostFrameCallback((_) async {
                   Get.defaultDialog(middleText: 'Are you sure?', actions: [
                     ElevatedButton(
-                        onPressed: () {
-                          ExpensesService().deleteExpense(item.id!, item);
+                        onPressed: () async {
+                          await ExpensesService().deleteExpense(item.id!, item);
+                          Get.back();
                         },
                         child: const Text('Yes, I am'))
                   ]);

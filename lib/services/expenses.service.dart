@@ -1,4 +1,6 @@
 import 'package:balance_app/controllers/balance.controller.dart';
+import 'package:balance_app/models/log.dart';
+import 'package:balance_app/services/log.service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:balance_app/models/expense.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +61,14 @@ class ExpensesService {
       await instance.doc(id).delete();
       data.cost = -1 * data.cost;
       await BalanceController.to.updateBalance(data, 'expense');
+      final log = Log(
+        value: -1 * data.cost,
+        name: data.description,
+        location: data.description,
+        date: data.date,
+        type: 'expense',
+      );
+      LogService().saveLog(log);
       return true;
     } catch (e) {
       Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);

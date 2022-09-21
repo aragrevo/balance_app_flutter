@@ -17,132 +17,136 @@ class PocketScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Card(
-              child: ListTile(
-                leading: const Icon(Icons.savings_rounded),
-                title: Text('Total I have',
+    return Positioned.fill(
+      child: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Card(
+                child: ListTile(
+                  leading: const Icon(Icons.savings_rounded),
+                  title: Text('Total I have',
+                      style: TextStyle(
+                        color: ThemeColors.to.black,
+                      )),
+                  trailing: Text(
+                    toCurrency(PocketController.to.totalPockets),
                     style: TextStyle(
-                      color: ThemeColors.to.black,
-                    )),
-                trailing: Text(
-                  toCurrency(PocketController.to.totalPockets),
-                  style: TextStyle(
-                      color: ThemeColors.to.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                        color: ThemeColors.to.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: _WalletsSection(),
-          ),
-          Expanded(
-            child: Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Obx(() {
-                        return _ListSection(
-                          title: 'Rest of balance',
-                          amount:
-                              toCurrency(PocketController.to.totalPocketRest),
-                          pockets: PocketController.to.pocketRest,
-                        );
-                      }),
-                      Obx(() {
-                        return _ListSection(
-                          title: 'Saved pockets',
-                          amount:
-                              toCurrency(PocketController.to.totalPocketSaved),
-                          pockets: PocketController.to.pocketSaved,
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-                DraggableScrollableSheet(
-                  initialChildSize: 0.18,
-                  minChildSize: 0.18,
-                  maxChildSize: 0.99,
-                  builder: (BuildContext context,
-                      ScrollController scrollController) {
-                    final list =
-                        PocketController.to.balanceInWallets.entries.toList();
-                    list.sort(((a, b) => b.value.compareTo(a.value)));
-                    return Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(20),
-                          topLeft: Radius.circular(20),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding:
-                                  const EdgeInsets.only(bottom: 10, top: 10),
-                              height: 5,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.indigoAccent.withOpacity(0.4),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(8)),
-                              ),
-                            ),
-                            Expanded(
-                              child: ListView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                controller: scrollController,
-                                itemCount: list.length,
-                                itemBuilder: (context, index) {
-                                  final item = list[index];
-                                  return Card(
-                                    child: ListTile(
-                                      leading: Icon(
-                                          pocketIcons[item.key.toLowerCase()]),
-                                      title: Text(item.key.toCapitalize,
-                                          style: TextStyle(
-                                            color: ThemeColors.to.black,
-                                          )),
-                                      trailing: Text(
-                                        toCurrency(item.value),
-                                        style: TextStyle(
-                                            color: ThemeColors.to.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                )
-              ],
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: _WalletsSection(),
             ),
-          )
-        ],
+            Expanded(
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Obx(() {
+                            return _ListSection(
+                              title: 'Rest of balance',
+                              amount: toCurrency(
+                                  PocketController.to.totalPocketRest),
+                              pockets: PocketController.to.pocketRest,
+                            );
+                          }),
+                          Obx(() {
+                            return _ListSection(
+                              title: 'Saved pockets',
+                              amount: toCurrency(
+                                  PocketController.to.totalPocketSaved),
+                              pockets: PocketController.to.pocketSaved,
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
+                  ),
+                  DraggableScrollableSheet(
+                    initialChildSize: 0.18,
+                    minChildSize: 0.18,
+                    maxChildSize: 0.99,
+                    builder: (BuildContext context,
+                        ScrollController scrollController) {
+                      final list =
+                          PocketController.to.balanceInWallets.entries.toList();
+                      list.sort(((a, b) => b.value.compareTo(a.value)));
+                      return Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20),
+                            topLeft: Radius.circular(20),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding:
+                                    const EdgeInsets.only(bottom: 10, top: 10),
+                                height: 5,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.indigoAccent.withOpacity(0.4),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(8)),
+                                ),
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  physics: const BouncingScrollPhysics(),
+                                  controller: scrollController,
+                                  itemCount: list.length,
+                                  itemBuilder: (context, index) {
+                                    final item = list[index];
+                                    return Card(
+                                      child: ListTile(
+                                        leading: Icon(pocketIcons[
+                                            item.key.toLowerCase()]),
+                                        title: Text(item.key.toCapitalize,
+                                            style: TextStyle(
+                                              color: ThemeColors.to.black,
+                                            )),
+                                        trailing: Text(
+                                          toCurrency(item.value),
+                                          style: TextStyle(
+                                              color: ThemeColors.to.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -229,13 +233,15 @@ class _PocketList extends StatelessWidget {
             child: Obx(() {
               return Stack(
                 children: [
-                  _CustomCard(
-                      title: pocket.name,
-                      subtitle: toCurrency(pocket.value),
-                      isNegative: pocket.value < 0,
-                      observation: pocket.location,
-                      icon: pocketIcons[pocket.location.toLowerCase()] ??
-                          Icons.alarm),
+                  Positioned(
+                    child: _CustomCard(
+                        title: pocket.name,
+                        subtitle: toCurrency(pocket.value),
+                        isNegative: pocket.value < 0,
+                        observation: pocket.location,
+                        icon: pocketIcons[pocket.location.toLowerCase()] ??
+                            Icons.alarm),
+                  ),
                   if (PocketController.to.pocketToDelete.value?.id == pocket.id)
                     Positioned(
                       top: -10,
