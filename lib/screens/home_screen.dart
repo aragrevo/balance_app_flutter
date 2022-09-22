@@ -1,6 +1,7 @@
 import 'package:balance_app/controllers/balance.controller.dart';
 import 'package:balance_app/controllers/expense.controller.dart';
 import 'package:balance_app/controllers/home.controller.dart';
+import 'package:balance_app/models/balance_detail.dart';
 import 'package:balance_app/models/expense.dart';
 import 'package:balance_app/screens/screens.dart';
 import 'package:balance_app/screens/transaction_screen.dart';
@@ -14,23 +15,26 @@ import 'package:intl/intl.dart';
 // TODO: Search functionality
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key}) : super(key: key);
-  final homeCtrl = Get.put(HomeController());
-  final expCtrl = Get.put(ExpenseController());
-  final balCtrl = Get.put(BalanceController());
+  const HomeScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/home';
 
   @override
   Widget build(BuildContext context) {
-    return const _Home();
+    final authSvc = Provider.of<AuthService>(context, listen: false);
+    if (authSvc.user?.id == null) return const SizedBox();
+    return _Home();
   }
 }
 
 class _Home extends StatelessWidget {
-  const _Home({
+  _Home({
     Key? key,
   }) : super(key: key);
+
+  final homeCtrl = Get.put(HomeController());
+  final expCtrl = Get.put(ExpenseController());
+  final balCtrl = Get.put(BalanceController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,12 +46,22 @@ class _Home extends StatelessWidget {
                 color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
             elevation: 0,
             leading: const _Avatar(),
-            actions: const [SizedBox()],
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
+                  await AuthService().signOut();
+                  Get.offNamedUntil(SigninScreen.routeName, (route) => false);
+                },
+              )
+            ],
             title: const Text('Balance App')),
         floatingActionButton: FloatingActionButton(
           heroTag: 'btn-home',
           onPressed: () async {
-            Get.toNamed(TransactionScreen.routeName);
+            BalanceController.to.balance != null
+                ? Get.toNamed(TransactionScreen.routeName)
+                : BalanceController.to.createBalance();
           },
           tooltip: 'Increment',
           child: const Icon(Icons.add),
@@ -60,16 +74,16 @@ class _Home extends StatelessWidget {
             data: Theme.of(context).copyWith(canvasColor: Colors.redAccent),
             child: const SettingsDrawer()),
         endDrawerEnableOpenDragGesture: false,
-        body: Obx(
-          () => IndexedStack(
+        body: Obx(() {
+          return IndexedStack(
             index: HomeController.to.currentIndex.value,
             children: [
               const _Body(),
               PocketScreen(),
               const ChartScreen(),
             ],
-          ),
-        ));
+          );
+        }));
   }
 }
 
@@ -89,7 +103,7 @@ class _Body extends StatelessWidget {
             GetX<BalanceController>(
               init: Get.put<BalanceController>(BalanceController()),
               builder: (BalanceController ctrl) {
-                return _BalanceCard(balance: ctrl.balance['balance']);
+                return _BalanceCard(balance: ctrl.balance?.balance);
               },
             ),
             DraggableScrollableSheet(
@@ -131,7 +145,7 @@ class _BalanceCard extends StatelessWidget {
     required this.balance,
   }) : super(key: key);
 
-  final balance;
+  final BalanceDetail? balance;
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +180,7 @@ class _BalanceCard extends StatelessWidget {
               Text(
                   NumberFormat.currency(
                           locale: 'en_US', symbol: '\$ ', decimalDigits: 0)
-                      .format(balance?['value'] ?? 0),
+                      .format(balance?.value ?? 0),
                   style: const TextStyle(
                       color: Colors.black,
                       fontSize: 25,
@@ -211,16 +225,14 @@ class _Summary extends StatelessWidget {
                 () => Expanded(
                     child: _Item(
                   title: 'Income',
-                  amount:
-                      BalanceController.to.balance['revenue']?['value'] ?? 0,
+                  amount: BalanceController.to.balance?.revenue.value ?? 0,
                 )),
               ),
               Obx(
                 () => Expanded(
                     child: _Item(
                   title: 'Expenses',
-                  amount:
-                      BalanceController.to.balance['expense']?['value'] ?? 0,
+                  amount: BalanceController.to.balance?.expense.value ?? 0,
                 )),
               ),
             ],
@@ -319,7 +331,12 @@ class _ExpensesList extends StatelessWidget {
           child: RefreshIndicator(
             onRefresh: onRefresh,
             child: expensesList.isEmpty
-                ? const Center(child: CircularProgressIndicator())
+                ? const Hero(
+                    tag: 'bitcoin-image',
+                    child: Image(
+                        image:
+                            AssetImage('assets/images/bitcoin_transfer.png')),
+                  )
                 : ListView.builder(
                     controller: scrollController,
                     itemCount: expensesList.length,

@@ -17,8 +17,8 @@ class ExpensesService {
     final month = DateTime.now().month;
     return _firestore
         .collection('expenses')
-        .orderBy('date', descending: true)
         .where('userId', isEqualTo: authSvc.user!.id)
+        .orderBy('date', descending: true)
         .snapshots()
         .map((QuerySnapshot query) {
       List<Expense> retVal = [];
@@ -37,8 +37,8 @@ class ExpensesService {
   Stream<List<Expense>> expenseHistoryStream() {
     return _firestore
         .collection('expenses')
-        .orderBy('date', descending: true)
         .where('userId', isEqualTo: authSvc.user!.id)
+        .orderBy('date', descending: true)
         .snapshots()
         .map((QuerySnapshot query) {
       List<Expense> retVal = [];

@@ -16,7 +16,7 @@ class BalanceDetail {
   int value;
   String name;
   String? icon;
-  String? position;
+  int? position;
   String id;
   String observation;
 

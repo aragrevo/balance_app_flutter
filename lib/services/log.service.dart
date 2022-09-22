@@ -13,9 +13,9 @@ class LogService {
   Stream<List<Log>> logStream() {
     return _firestore
         .collection('logs')
+        .where('userId', isEqualTo: authSvc.user!.id)
         .orderBy('date', descending: true)
         .limit(100)
-        .where('userId', isEqualTo: authSvc.user!.id)
         .snapshots()
         .map((QuerySnapshot query) {
       List<Log> retVal = [];

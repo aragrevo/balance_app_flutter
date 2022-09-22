@@ -316,20 +316,24 @@ class _BalanceChart extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Obx(
-        () => PieChart(
+      child: Obx(() {
+        if (BalanceController.to.balance == null) {
+          return const Center(
+            child: Image(image: AssetImage('assets/images/empty.jpg')),
+          );
+        }
+        return PieChart(
           PieChartData(
               borderData: FlBorderData(
                 show: false,
               ),
               sectionsSpace: 0,
               centerSpaceRadius: 55,
-              startDegreeOffset: -90,
               sections: showingSections()),
           swapAnimationDuration: const Duration(milliseconds: 550),
           swapAnimationCurve: Curves.linear,
-        ),
-      ),
+        );
+      }),
     );
   }
 

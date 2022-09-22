@@ -18,8 +18,12 @@ class BalanceService {
     return _firestore.collection('data').doc(filter).snapshots().map((event) {
       final balance = event.data() as Map<String, dynamic>;
       balance['id'] = event.id;
-      final b = Balance.fromJson(balance);
-      return b;
+      try {
+        final b = Balance.fromJson(balance);
+        return b;
+      } catch (e) {
+        print(e);
+      }
     });
   }
 
