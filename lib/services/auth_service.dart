@@ -26,4 +26,20 @@ class AuthService with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<GoogleSignInAccount?> signOut() async {
+    try {
+      isLoading = true;
+      notifyListeners();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signOut();
+      user = googleUser;
+      return googleUser;
+    } catch (e) {
+      print(e);
+      rethrow;
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
 }

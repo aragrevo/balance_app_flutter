@@ -1,15 +1,19 @@
 import 'dart:async';
 import 'package:balance_app/models/pocket.dart';
+import 'package:balance_app/services/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class PocketService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final authSvc = Provider.of<AuthService>(Get.context!, listen: false);
 
   Stream<List<Pocket>> pocketStream() {
     return _firestore
         .collection('pockets')
+        .where('userId', isEqualTo: authSvc.user!.id)
         .snapshots()
         .map((QuerySnapshot query) {
       List<Pocket> retVal = [];
@@ -28,9 +32,11 @@ class PocketService {
     final CollectionReference instance =
         FirebaseFirestore.instance.collection('pockets');
     try {
+      final obj = data.toJson();
+      obj['userId'] = authSvc.user!.id;
       (id == null || id.isEmpty)
-          ? await instance.add(data.toJson())
-          : await instance.doc(id).set(data.toJson());
+          ? await instance.add(obj)
+          : await instance.doc(id).set(obj);
       return true;
     } catch (e) {
       Get.snackbar('Error', e.toString(), backgroundColor: Colors.red);

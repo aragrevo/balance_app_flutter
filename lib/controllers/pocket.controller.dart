@@ -1,5 +1,6 @@
 import 'package:balance_app/models/log.dart';
 import 'package:balance_app/models/pocket.dart';
+import 'package:balance_app/services/balance.service.dart';
 import 'package:balance_app/services/log.service.dart';
 import 'package:balance_app/services/pocket.service.dart';
 import 'package:flutter/material.dart';
@@ -129,6 +130,10 @@ class PocketController extends GetxController {
     restOfBalance.value = false;
     isUpdating.value = false;
     formKey.currentState?.reset();
+  }
+
+  createWallets() {
+    BalanceService().addWallets();
   }
 }
 

@@ -1,66 +1,69 @@
 import 'package:balance_app/controllers/balance.controller.dart';
 import 'package:balance_app/controllers/expense.controller.dart';
 import 'package:balance_app/utils/format.dart';
+import 'package:balance_app/widgets/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:get/get.dart';
 import 'package:collection/collection.dart';
 
 class ChartScreen extends StatelessWidget {
-  ChartScreen({Key? key}) : super(key: key);
+  const ChartScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/login';
-  final expCtrl = Get.put(ExpenseController());
 
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    return SingleChildScrollView(
-      child: Container(
-        margin: EdgeInsets.zero,
-        color: Colors.white,
-        child: Column(
-          children: [
-            const AspectRatio(aspectRatio: 1.4, child: _BalanceChart()),
-            AspectRatio(
-              aspectRatio: 1,
-              child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
-                  color: const Color(0xff2c4260),
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 5, vertical: 16),
-                      child: Column(
-                        children: [
-                          const _BalanceHeaderChart(),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          LegendsListWidget(
-                            legends: [
-                              Legend(
-                                  now
-                                      .subtract(const Duration(days: 60))
-                                      .nameMonth,
-                                  const Color(0xff632af2)),
-                              Legend(
-                                  now
-                                      .subtract(const Duration(days: 30))
-                                      .nameMonth,
-                                  const Color(0xff53fdd7)),
-                              Legend(now.nameMonth, const Color(0xffff5182)),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          _ExpensesChart()
-                        ],
-                      ))),
-            )
-          ],
-        ),
+    return Container(
+      child: Column(
+        children: [
+          const CustomSpacer(20),
+          const Expanded(child: _BalanceChart()),
+          const CustomSpacer(20),
+          Expanded(
+            flex: 2,
+            child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
+                color: const Color(0xff2c4260),
+                child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 16),
+                    child: Column(
+                      children: [
+                        const _BalanceHeaderChart(),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        LegendsListWidget(
+                          legends: [
+                            Legend(
+                                now
+                                    .subtract(const Duration(days: 60))
+                                    .nameMonth,
+                                const Color(0xff632af2)),
+                            Legend(
+                                now
+                                    .subtract(const Duration(days: 30))
+                                    .nameMonth,
+                                const Color(0xff53fdd7)),
+                            Legend(now.nameMonth, const Color(0xffff5182)),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Obx(() => ExpenseController
+                                .to.lastExpensesHistory.entries.isEmpty
+                            ? const SizedBox()
+                            : _ExpensesChart()),
+                        const CustomSpacer(50)
+                      ],
+                    ))),
+          ),
+          // const CustomSpacer(50)
+        ],
       ),
     );
   }
@@ -309,63 +312,63 @@ class _BalanceChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        elevation: 0,
-        color: const Color.fromRGBO(249, 249, 249, 1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Expanded(
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Obx(
-              () => PieChart(
-                PieChartData(
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    sectionsSpace: 0,
-                    centerSpaceRadius: 0,
-                    sections: showingSections()),
-                swapAnimationDuration: const Duration(milliseconds: 550),
-                swapAnimationCurve: Curves.linear,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Obx(
+        () => PieChart(
+          PieChartData(
+              borderData: FlBorderData(
+                show: false,
               ),
-            ),
-          ),
-        ));
+              sectionsSpace: 0,
+              centerSpaceRadius: 55,
+              startDegreeOffset: -90,
+              sections: showingSections()),
+          swapAnimationDuration: const Duration(milliseconds: 550),
+          swapAnimationCurve: Curves.linear,
+        ),
+      ),
+    );
   }
 
   List<PieChartSectionData> showingSections() {
     const textStyle = TextStyle(
-        fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xffffffff));
-    final income = BalanceController.to.balance['revenue']?['value'] ?? 1;
+        fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white);
+    final income = BalanceController.to.balance?.revenue.value ?? 1;
     return List.generate(
       2,
       (i) {
         switch (i) {
           case 0:
-            final value =
-                BalanceController.to.balance['balance']?['value'] ?? 1;
-            final percentage = ((value / income) * 100).round();
+            final value = BalanceController.to.balance?.balance.value ?? 0;
+            final p = ((value / income) * 100);
+            final percentage = p.isNaN ? 0 : p.round();
             return PieChartSectionData(
               color: Colors.indigoAccent,
               value: percentage.toDouble(),
-              title: 'Balance\n${toCurrency(value)}',
-              radius: Get.width / 3,
+              title: 'Balance\n${toSmallCurrency(value)}',
+              radius: Get.width / 4.75,
               titleStyle: textStyle,
               badgeWidget: CircleAvatar(child: Text('$percentage%')),
               badgePositionPercentageOffset: .98,
+              titlePositionPercentageOffset: 0.4,
             );
           case 1:
-            final value =
-                BalanceController.to.balance['expense']?['value'] ?? 1;
-            final percentage = ((value / income) * 100).round();
+            final value = BalanceController.to.balance?.expense.value ?? 0;
+            final p = ((value / income) * 100);
+            final percentage = p.isNaN ? 0 : p.round();
             return PieChartSectionData(
                 color: Colors.yellow[600],
                 value: percentage.toDouble(),
-                title: 'Expense\n${toCurrency(value)}',
-                radius: Get.width / 3,
-                badgeWidget: CircleAvatar(child: Text('$percentage%')),
-                badgePositionPercentageOffset: .98,
+                title: 'Expense\n${toSmallCurrency(value)}',
+                radius: Get.width / 5,
+                badgeWidget: CircleAvatar(
+                  child: Text('$percentage%'),
+                ),
+                badgePositionPercentageOffset: 1,
+                titlePositionPercentageOffset: 0.4,
                 titleStyle: textStyle);
           default:
             throw Error();

@@ -22,5 +22,6 @@ class Wallet {
         "value": value,
         "name": name,
         "icon": icon,
+        "id": id,
       };
 }

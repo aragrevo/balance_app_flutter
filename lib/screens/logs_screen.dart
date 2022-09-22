@@ -68,7 +68,7 @@ class _Body extends StatelessWidget {
             () {
               if (LogController.to.logs.isEmpty) {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: Image(image: AssetImage('assets/images/empty.jpg')),
                 );
               }
               return Expanded(

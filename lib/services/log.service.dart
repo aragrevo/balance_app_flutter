@@ -1,17 +1,21 @@
 import 'dart:async';
 import 'package:balance_app/models/log.dart';
+import 'package:balance_app/services/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class LogService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final authSvc = Provider.of<AuthService>(Get.context!, listen: false);
 
   Stream<List<Log>> logStream() {
     return _firestore
         .collection('logs')
         .orderBy('date', descending: true)
         .limit(100)
+        .where('userId', isEqualTo: authSvc.user!.id)
         .snapshots()
         .map((QuerySnapshot query) {
       List<Log> retVal = [];
@@ -35,7 +39,9 @@ class LogService {
     final CollectionReference instance =
         FirebaseFirestore.instance.collection('logs');
     try {
-      await instance.add(data.toJson());
+      final obj = data.toJson();
+      obj['userId'] = authSvc.user!.id;
+      await instance.add(obj);
 
       return true;
     } catch (e) {

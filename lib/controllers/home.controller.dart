@@ -35,7 +35,8 @@ class HomeController extends GetxController {
     scaffoldKey.currentState!.openDrawer();
   }
 
-  String formattedDate(String date) {
+  String formattedDate(String value) {
+    final date = value.split('_')[0];
     final month = date.substring(0, date.length - 4).toCapitalize;
     final year = date.substring(date.length - 4);
     return '$month $year';

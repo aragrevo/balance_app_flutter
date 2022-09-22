@@ -28,7 +28,9 @@ Map<String, IconData> customIcons = {
 Map<String, IconData> walletIcons = {
   'card': Icons.credit_card,
   'dinero': Icons.money,
+  'cash': Icons.money,
   'movil': Icons.ad_units_rounded,
+  'mobile': Icons.ad_units_rounded,
 };
 
 Map<String, IconData> pocketIcons = {

@@ -1,4 +1,6 @@
 import 'package:balance_app/controllers/pocket.controller.dart';
+import 'package:balance_app/models/balance.dart';
+import 'package:balance_app/models/balance_detail.dart';
 import 'package:balance_app/models/expense.dart';
 import 'package:balance_app/models/wallet.dart';
 import 'package:balance_app/services/balance.service.dart';
@@ -7,14 +9,14 @@ import 'package:get/get.dart';
 
 class BalanceController extends GetxController {
   static BalanceController get to => Get.find();
-  final RxMap<String, dynamic> _balance = RxMap<String, dynamic>();
+  final Rxn<Balance> _balance = Rxn<Balance>();
   final RxList<Wallet> _wallet = RxList<Wallet>();
 
   final RxString newValue = ''.obs;
   final RxString updateValue = ''.obs;
   final isUpdating = false.obs;
 
-  Map<String, dynamic> get balance => _balance.value;
+  Balance? get balance => _balance.value;
   List<Wallet> get wallet => _wallet.value;
 
   @override
@@ -65,17 +67,48 @@ class BalanceController extends GetxController {
     newValue.value = '';
     updateValue.value = '';
     isUpdating.value = false;
-    // formKey.currentState?.reset();
   }
 
   Future<void> updateBalance(Expense data, String type) async {
     final obj = balance;
+    if (obj == null) return;
     final currentMonth = BalanceService().getCurrentMonth();
-    final category = type == 'revenue' ? 'revenue' : 'expense';
-    obj[category]['value'] += data.cost;
-    obj[category]['observation'] = data.date;
-    obj['balance']['value'] = obj['revenue']['value'] - obj['expense']['value'];
-    obj['balance']['observation'] = data.date;
+    final category = type == 'revenue' ? obj.revenue : obj.expense;
+    category.value += data.cost;
+    category.observation = data.date;
+    obj.balance.value = obj.revenue.value - obj.expense.value;
+    obj.balance.observation = data.date;
     await BalanceService().saveTotals(currentMonth, obj);
+  }
+
+  createBalance() {
+    Get.defaultDialog(
+        title: 'Are you sure?',
+        middleText: 'Create a new Balance for this month',
+        actions: [
+          ElevatedButton(
+              onPressed: () async {
+                final currentMonth = BalanceService().getCurrentMonth();
+                final detailBalance = _createDetail('balance');
+                final detailExpense = _createDetail('expense');
+                final detailRevenue = _createDetail('revenue');
+                final balance = Balance(
+                    id: currentMonth,
+                    balance: detailBalance,
+                    expense: detailExpense,
+                    revenue: detailRevenue);
+                await BalanceService().addTotals(balance);
+                Get.back();
+              },
+              child: const Text('Yes, I am'))
+        ]);
+  }
+
+  BalanceDetail _createDetail(String type) {
+    return BalanceDetail(
+        value: 0,
+        name: type,
+        observation: DateTime.now().toIso8601String(),
+        id: type);
   }
 }

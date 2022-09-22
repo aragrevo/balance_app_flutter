@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: SigninScreen.routeName,
           getPages: [
-            GetPage(name: HomeScreen.routeName, page: () => HomeScreen()),
+            GetPage(name: HomeScreen.routeName, page: () => const HomeScreen()),
             GetPage(
                 name: LoginScreen.routeName, page: () => const LoginScreen()),
             GetPage(

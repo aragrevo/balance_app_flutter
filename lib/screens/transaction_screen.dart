@@ -5,6 +5,8 @@ import 'package:balance_app/utils/theme_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// TODO: Add field date
+
 class TransactionScreen extends StatelessWidget {
   TransactionScreen({Key? key}) : super(key: key);
   static const String routeName = '/transaction';
@@ -50,7 +52,10 @@ class _Form extends StatelessWidget {
       key: CategoryController.to.formKey,
       child: Column(
         children: [
-          const Image(image: AssetImage('assets/images/bitcoin_transfer.png')),
+          const Hero(
+              tag: 'bitcoin-image',
+              child: Image(
+                  image: AssetImage('assets/images/bitcoin_transfer.png'))),
           DropdownButtonFormField(
               decoration: const InputDecoration(labelText: 'Type'),
               validator: (value) {
