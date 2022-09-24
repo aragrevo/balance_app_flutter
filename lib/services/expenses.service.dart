@@ -44,6 +44,7 @@ class ExpensesService {
       List<Expense> retVal = [];
       query.docs.forEach((doc) {
         final expense = doc.data() as Map<String, dynamic>;
+        expense['id'] = doc.id;
         retVal.add(Expense.fromJson(expense));
       });
       return retVal;
@@ -61,6 +62,17 @@ class ExpensesService {
     }
   }
 
+  Future<void> updateExpense(Expense expense) async {
+    try {
+      final obj = expense.toJson();
+      obj['userId'] = authSvc.user!.id;
+      await _firestore.collection('expenses').doc(expense.id).set(obj);
+    } catch (err) {
+      print(err);
+      rethrow;
+    }
+  }
+
   Future<bool> deleteExpense(String id, Expense data) async {
     final CollectionReference instance =
         FirebaseFirestore.instance.collection('expenses');
@@ -69,10 +81,10 @@ class ExpensesService {
       data.cost = -1 * data.cost;
       await BalanceController.to.updateBalance(data, 'expense');
       final log = Log(
-        value: -1 * data.cost,
+        value: data.cost,
         name: data.description,
         location: data.description,
-        date: data.date,
+        date: DateTime.now().toIso8601String(),
         type: 'expense',
       );
       LogService().saveLog(log);

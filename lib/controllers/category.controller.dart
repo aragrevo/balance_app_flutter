@@ -10,13 +10,25 @@ import 'package:balance_app/services/categories.service.dart';
 class CategoryController extends GetxController {
   static CategoryController get to => Get.find();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController dateCtrl = TextEditingController(text: '');
 
   final _categories = <dynamic>[].obs;
   var type = ''.obs;
   var category = ''.obs;
   var amount = ''.obs;
+  var previousAmount = ''.obs;
   var observation = ''.obs;
+  var date = Rxn<DateTime>();
   var isSaving = false.obs;
+
+  void resetForm() {
+    formKey.currentState?.reset();
+    type.value = '';
+    category.value = '';
+    amount.value = '';
+    observation.value = '';
+    _categories.value = [];
+  }
 
   List<dynamic> get categories {
     final cat = _categories.value;
@@ -39,9 +51,10 @@ class CategoryController extends GetxController {
 
   Future<void> saveTransaction() async {
     isSaving.value = true;
+    final d = (date.value == null) ? DateTime.now() : date.value;
     final data = Expense(
         cost: int.parse(amount.value),
-        date: DateTime.now().toIso8601String(),
+        date: d!.toIso8601String(),
         description: category.value,
         observation: observation.value.isEmpty ? null : observation.value,
         quantity: 1);
@@ -59,6 +72,23 @@ class CategoryController extends GetxController {
 
     final saved = await ExpenseController.to.saveExpense(data);
     if (!saved) return;
+    await updateTotals(data);
+  }
+
+  Future<void> updateTransaction(String id) async {
+    isSaving.value = true;
+    final d = (date.value == null) ? DateTime.now() : date.value;
+    final data = Expense(
+        cost: int.parse(amount.value),
+        date: d!.toIso8601String(),
+        description: category.value,
+        id: id,
+        observation: observation.value.isEmpty ? null : observation.value,
+        quantity: 1);
+
+    final saved = await ExpenseController.to.updateExpense(data);
+    if (!saved) return;
+    data.cost = int.parse(amount.value) - int.parse(previousAmount.value);
     await updateTotals(data);
   }
 

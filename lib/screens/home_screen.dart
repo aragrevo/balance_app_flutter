@@ -1,4 +1,5 @@
 import 'package:balance_app/controllers/balance.controller.dart';
+import 'package:balance_app/controllers/category.controller.dart';
 import 'package:balance_app/controllers/expense.controller.dart';
 import 'package:balance_app/controllers/home.controller.dart';
 import 'package:balance_app/models/balance_detail.dart';
@@ -35,6 +36,7 @@ class _Home extends StatelessWidget {
   final homeCtrl = Get.put(HomeController());
   final expCtrl = Get.put(ExpenseController());
   final balCtrl = Get.put(BalanceController());
+  final categoryCtrl = Get.put(CategoryController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +61,7 @@ class _Home extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           heroTag: 'btn-home',
           onPressed: () async {
+            CategoryController.to.resetForm();
             BalanceController.to.balance != null
                 ? Get.toNamed(TransactionScreen.routeName)
                 : BalanceController.to.createBalance();

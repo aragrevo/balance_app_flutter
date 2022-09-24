@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
                 name: SigninScreen.routeName, page: () => const SigninScreen()),
             GetPage(
                 name: TransactionScreen.routeName,
-                page: () => TransactionScreen(),
+                page: () => const TransactionScreen(),
                 transition: Transition.fadeIn),
             GetPage(
                 name: LogsScreen.routeName,

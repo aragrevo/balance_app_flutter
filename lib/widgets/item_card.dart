@@ -1,7 +1,9 @@
+import 'package:balance_app/controllers/category.controller.dart';
 import 'package:balance_app/models/expense.dart';
 import 'package:balance_app/services/expenses.service.dart';
 import 'package:balance_app/utils/format.dart';
 import 'package:balance_app/utils/icons.dart';
+import 'package:balance_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -44,10 +46,40 @@ class ItemCard extends StatelessWidget {
           itemBuilder: (context) => [
             PopupMenuItem(
               onTap: () {
+                CategoryController.to.type.value = 'expense';
+                CategoryController.to.getCategories('expense');
+                var categoryId = title.toLowerCase();
+                final categoryMap = CategoryController.to.categories
+                    .firstWhereOrNull((element) => element['id'] == categoryId);
+                if (categoryMap == null) {
+                  categoryId = 'shop';
+                  CategoryController.to.observation.value = title;
+                }
+                CategoryController.to.category.value = categoryId;
+                CategoryController.to.amount.value = item.cost.toString();
+                CategoryController.to.previousAmount.value =
+                    item.cost.toString();
+                CategoryController.to.date.value = DateTime.parse(item.date);
+                CategoryController.to.dateCtrl.text =
+                    DateTime.parse(item.date).formatDate;
                 WidgetsBinding.instance?.addPostFrameCallback((_) async {
                   Get.bottomSheet(
                       Container(
-                        height: Get.height / 1.7,
+                        height: Get.height / 1.65,
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'Edit Transaction',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            const CustomSpacer(16),
+                            TransactionForm(
+                              id: item.id,
+                            ),
+                          ],
+                        ),
                       ),
                       isScrollControlled: true,
                       backgroundColor: Colors.white,

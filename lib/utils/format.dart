@@ -25,4 +25,8 @@ extension DateUtil on DateTime {
   String get nameMonth {
     return DateFormat.MMMM().format(this);
   }
+
+  String get formatDate {
+    return DateFormat('dd/MM/yyyy').format(this);
+  }
 }

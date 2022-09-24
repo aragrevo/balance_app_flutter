@@ -51,7 +51,28 @@ class ExpenseController extends GetxController {
         value: expense.cost,
         name: expense.description,
         location: expense.description,
-        date: expense.date,
+        date: DateTime.now().toIso8601String(),
+        type: 'expense',
+      );
+      LogService().saveLog(log);
+      return true;
+    } catch (e) {
+      Get.defaultDialog(title: 'Error', content: Text(e.toString()));
+      return false;
+    } finally {
+      isSaving.value = false;
+    }
+  }
+
+  Future<bool> updateExpense(Expense expense) async {
+    isSaving.value = true;
+    try {
+      await ExpensesService().updateExpense(expense);
+      final log = Log(
+        value: expense.cost,
+        name: expense.description,
+        location: expense.description,
+        date: DateTime.now().toIso8601String(),
         type: 'expense',
       );
       LogService().saveLog(log);
