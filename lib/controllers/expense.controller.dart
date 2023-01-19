@@ -16,22 +16,31 @@ class ExpenseController extends GetxController {
   List<Expense> get expensesHistory => _expensesHistory.value;
   Map<String, List<int>> get lastExpensesHistory {
     final Map<String, List<int>> list = {};
-    final year = DateTime.now().year;
-    final month = DateTime.now().month;
-    final lastMonths = [0, 1, 2];
+    final date = DateTime.now();
+    final currentFormatDate = '${date.year}${date.month}';
+    final dateLastMonth = DateTime.now().subtract(const Duration(days: 30));
+    final lastFormatDate = '${dateLastMonth.year}${dateLastMonth.month}';
+    final dateSecondLastMonth =
+        DateTime.now().subtract(const Duration(days: 60));
+    final secondLastFormatDate =
+        '${dateSecondLastMonth.year}${dateSecondLastMonth.month}';
+    final objIndexes = {
+      currentFormatDate: 0,
+      lastFormatDate: 1,
+      secondLastFormatDate: 2
+    };
     _expensesHistory.value.forEach((expense) {
       final expenseDate = DateTime.parse(expense.date);
-      if (expenseDate.year == year) {
-        for (var i = 0; i < lastMonths.length; i++) {
-          if (expenseDate.month == month - i) {
-            final hasData = list[expense.description];
-            if (hasData == null || hasData.isEmpty) {
-              list[expense.description] = List.filled(lastMonths.length, 0);
-            }
-            var oldValue = list[expense.description]![i];
-            list[expense.description]![i] = oldValue + expense.cost;
-          }
+      final expenseFormatDate = '${expenseDate.year}${expenseDate.month}';
+      final index = objIndexes[expenseFormatDate] ?? -1;
+      if (index != -1) {
+        final key = expense.description;
+        final hasData = list[key];
+        if (hasData == null || hasData.isEmpty) {
+          list[key] = List.filled(3, 0);
         }
+        var oldValue = list[key]![index];
+        list[key]![index] = oldValue + expense.cost;
       }
     });
     return list;
