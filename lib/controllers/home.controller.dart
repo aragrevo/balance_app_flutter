@@ -9,6 +9,7 @@ class HomeController extends GetxController {
 
   final RxList<String> _months = RxList<String>();
   var currentIndex = 0.obs;
+  var searching = false.obs;
 
   List<String> get months {
     final m = _months.value.map((e) => formattedDate(e)).toList();

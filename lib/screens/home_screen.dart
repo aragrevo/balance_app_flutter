@@ -313,6 +313,7 @@ class _ExpensesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var queryExpensesList = expensesList.obs;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -322,35 +323,59 @@ class _ExpensesList extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Recent expenses',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.search))
+              Obx(() => Expanded(
+                  child: (HomeController.to.searching.value == false)
+                      ? const Text(
+                          'Recent expenses',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        )
+                      : TextFormField(
+                          initialValue: '',
+                          onChanged: (value) {
+                            final query = value.toLowerCase();
+                            queryExpensesList.value = expensesList
+                                .where((element) => element.description
+                                    .toLowerCase()
+                                    .contains(query))
+                                .toList();
+                          },
+                          keyboardType: TextInputType.text,
+                          decoration: const InputDecoration(
+                              labelText: 'Search',
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 12)),
+                        ))),
+              IconButton(
+                  onPressed: () {
+                    HomeController.to.searching.value =
+                        !HomeController.to.searching.value;
+                  },
+                  icon: const Icon(Icons.search))
             ],
           ),
         ),
         Expanded(
-          child: RefreshIndicator(
-            onRefresh: onRefresh,
-            child: expensesList.isEmpty
-                ? const Hero(
-                    tag: 'bitcoin-image',
-                    child: Image(
-                        image:
-                            AssetImage('assets/images/bitcoin_transfer.png')),
-                  )
-                : ListView.builder(
-                    controller: scrollController,
-                    itemCount: expensesList.length,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (_, int index) {
-                      final item = expensesList[index];
-                      return ItemCard(
-                        item: item,
-                      );
-                    }),
-          ),
+          child: Obx(() => RefreshIndicator(
+                onRefresh: onRefresh,
+                child: queryExpensesList.isEmpty
+                    ? const Hero(
+                        tag: 'bitcoin-image',
+                        child: Image(
+                            image: AssetImage(
+                                'assets/images/bitcoin_transfer.png')),
+                      )
+                    : ListView.builder(
+                        controller: scrollController,
+                        itemCount: queryExpensesList.length,
+                        physics: const BouncingScrollPhysics(),
+                        itemBuilder: (_, int index) {
+                          final item = queryExpensesList[index];
+                          return ItemCard(
+                            item: item,
+                          );
+                        }),
+              )),
         ),
       ],
     );
