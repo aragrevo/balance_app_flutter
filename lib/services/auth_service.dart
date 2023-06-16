@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class Account {
   GoogleSignInAccount? googleUser;
-  Money? money;
+  Money? money = Money.eur;
   Account({required this.googleUser, this.money});
 }
 
@@ -30,7 +30,7 @@ class AuthService with ChangeNotifier {
       isLoading = true;
       notifyListeners();
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      account ??= Account(googleUser: googleUser!);
+      account ??= Account(googleUser: googleUser!, money: Money.eur);
       account?.googleUser = googleUser;
       return googleUser;
     } catch (e) {

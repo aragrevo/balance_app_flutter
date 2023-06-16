@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:balance_app/models/balance_detail.dart';
 import 'package:balance_app/models/pocket.dart';
 import 'package:balance_app/services/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,11 +10,12 @@ import 'package:provider/provider.dart';
 class PocketService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final authSvc = Provider.of<AuthService>(Get.context!, listen: false);
-
   Stream<List<Pocket>> pocketStream() {
+    final money = authSvc.money == Money.eur ? Money.eur : null;
     return _firestore
         .collection('pockets')
         .where('userId', isEqualTo: authSvc.user!.id)
+        .where('money', isEqualTo: money)
         .snapshots()
         .map((QuerySnapshot query) {
       List<Pocket> retVal = [];
