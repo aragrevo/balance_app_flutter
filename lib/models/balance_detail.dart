@@ -11,6 +11,7 @@ class BalanceDetail {
       required this.name,
       this.icon,
       this.position,
+      this.euro,
       required this.observation,
       required this.id});
   int value;
@@ -19,15 +20,16 @@ class BalanceDetail {
   int? position;
   String id;
   String observation;
+  int? euro;
 
   factory BalanceDetail.fromJson(Map<String, dynamic> json) => BalanceDetail(
-        value: json["value"],
-        name: json['name'],
-        icon: json["icon"],
-        id: json["id"],
-        observation: json["observation"],
-        position: json["position"],
-      );
+      value: json["value"],
+      name: json['name'],
+      icon: json["icon"],
+      id: json["id"],
+      observation: json["observation"],
+      position: json["position"],
+      euro: json["euro"]);
 
   Map<String, dynamic> toJson() => {
         "value": value,
@@ -35,5 +37,8 @@ class BalanceDetail {
         "icon": icon,
         "observation": observation,
         "id": id,
+        "euro": euro
       };
 }
+
+enum Money { cop, eur }

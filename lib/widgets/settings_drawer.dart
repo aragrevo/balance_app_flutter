@@ -1,10 +1,15 @@
 import 'package:balance_app/controllers/home.controller.dart';
+import 'package:balance_app/models/balance_detail.dart';
 import 'package:balance_app/screens/logs_screen.dart';
+import 'package:balance_app/screens/screens.dart';
 import 'package:balance_app/services/balance.service.dart';
 import 'package:balance_app/utils/theme_colors.dart';
 import 'package:balance_app/widgets/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+
+import '../services/auth_service.dart';
 
 class SettingsDrawer extends StatelessWidget {
   const SettingsDrawer({
@@ -13,6 +18,8 @@ class SettingsDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authSvc = Provider.of<AuthService>(context, listen: false);
+    final isEuro = authSvc.money == Money.eur;
     return SafeArea(
       child: Drawer(
         child: Scaffold(
@@ -71,6 +78,19 @@ class SettingsDrawer extends StatelessWidget {
                             Get.toNamed(LogsScreen.routeName);
                           },
                           leading: const Icon(Icons.list_rounded),
+                        ),
+                        ListTile(
+                          title: Text(isEuro ? 'EURO' : 'PESOS'),
+                          onTap: () async {
+                            final money = isEuro ? Money.cop : Money.eur;
+                            authSvc.money = money;
+                            await authSvc.signOut();
+                            Get.offNamedUntil(
+                                SigninScreen.routeName, (route) => false);
+                          },
+                          leading: Icon(isEuro
+                              ? Icons.euro
+                              : Icons.currency_exchange_outlined),
                         )
                       ],
                     ),

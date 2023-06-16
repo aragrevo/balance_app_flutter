@@ -1,9 +1,23 @@
+import 'package:balance_app/models/balance_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+class Account {
+  GoogleSignInAccount? googleUser;
+  Money? money;
+  Account({required this.googleUser, this.money});
+}
+
 class AuthService with ChangeNotifier {
-  GoogleSignInAccount? user;
+  Account? account;
   bool isLoading = false;
+  GoogleSignInAccount? get user => account?.googleUser;
+
+  Money? get money => account?.money;
+  set money(Money? value) {
+    account?.money = value;
+    notifyListeners();
+  }
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
@@ -16,7 +30,8 @@ class AuthService with ChangeNotifier {
       isLoading = true;
       notifyListeners();
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      user = googleUser;
+      account ??= Account(googleUser: googleUser!);
+      account?.googleUser = googleUser;
       return googleUser;
     } catch (e) {
       print(e);
@@ -32,7 +47,8 @@ class AuthService with ChangeNotifier {
       isLoading = true;
       notifyListeners();
       final GoogleSignInAccount? googleUser = await _googleSignIn.signOut();
-      user = googleUser;
+      // account = Account(googleUser: googleUser!);
+      account?.googleUser = googleUser;
       return googleUser;
     } catch (e) {
       print(e);

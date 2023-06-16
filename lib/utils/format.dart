@@ -1,11 +1,15 @@
+import 'package:balance_app/models/balance_detail.dart';
 import 'package:intl/intl.dart';
 
-String toCurrency(dynamic value) {
+String toCurrency(dynamic value, {Money? money}) {
   if (value == null || value == '') return '';
   if (value is String) {
     value = int.parse(value);
   }
-  return NumberFormat.currency(locale: 'en_US', symbol: '\$', decimalDigits: 0)
+  final isEuro = money == Money.eur;
+  final symbol = isEuro ? '€ ' : '\$ ';
+  return NumberFormat.currency(
+          locale: 'en_US', symbol: symbol, decimalDigits: 0)
       .format(value);
 }
 

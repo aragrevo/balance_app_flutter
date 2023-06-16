@@ -1,4 +1,5 @@
 import 'package:balance_app/controllers/balance.controller.dart';
+import 'package:balance_app/models/balance_detail.dart';
 import 'package:balance_app/models/log.dart';
 import 'package:balance_app/services/auth_service.dart';
 import 'package:balance_app/services/log.service.dart';
@@ -15,9 +16,11 @@ class ExpensesService {
   Stream<List<Expense>> expenseStream() {
     final year = DateTime.now().year;
     final month = DateTime.now().month;
+    final money = authSvc.money == Money.eur ? Money.eur : null;
     return _firestore
         .collection('expenses')
         .where('userId', isEqualTo: authSvc.user!.id)
+        .where('money', isEqualTo: money)
         .orderBy('date', descending: true)
         .snapshots()
         .map((QuerySnapshot query) {

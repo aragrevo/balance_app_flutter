@@ -7,6 +7,7 @@ import 'package:balance_app/models/expense.dart';
 import 'package:balance_app/screens/screens.dart';
 import 'package:balance_app/screens/transaction_screen.dart';
 import 'package:balance_app/services/services.dart';
+import 'package:balance_app/utils/format.dart';
 import 'package:balance_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -152,6 +153,7 @@ class _BalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authSvc = Provider.of<AuthService>(context, listen: false);
     return Positioned(
       top: 100,
       left: 30,
@@ -180,10 +182,7 @@ class _BalanceCard extends StatelessWidget {
                   style: TextStyle(
                       color: Colors.black54, fontWeight: FontWeight.w600)),
               const SizedBox(width: 10),
-              Text(
-                  NumberFormat.currency(
-                          locale: 'en_US', symbol: '\$ ', decimalDigits: 0)
-                      .format(balance?.value ?? 0),
+              Text(toCurrency(balance?.value, money: authSvc.money),
                   style: const TextStyle(
                       color: Colors.black,
                       fontSize: 25,
@@ -203,6 +202,8 @@ class _Summary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authSvc = Provider.of<AuthService>(context, listen: false);
+    final isEuro = authSvc.money == Money.eur;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
@@ -224,20 +225,26 @@ class _Summary extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Obx(
-                () => Expanded(
+              Obx(() {
+                final revenue = BalanceController.to.balance?.revenue;
+                final amount = isEuro ? revenue?.euro : revenue?.value;
+                return Expanded(
                     child: _Item(
+                  isEuro: isEuro,
                   title: 'Income',
-                  amount: BalanceController.to.balance?.revenue.value ?? 0,
-                )),
-              ),
-              Obx(
-                () => Expanded(
+                  amount: amount ?? 0,
+                ));
+              }),
+              Obx(() {
+                final expense = BalanceController.to.balance?.expense;
+                final amount = isEuro ? expense?.euro : expense?.value;
+                return Expanded(
                     child: _Item(
+                  isEuro: isEuro,
                   title: 'Expenses',
-                  amount: BalanceController.to.balance?.expense.value ?? 0,
-                )),
-              ),
+                  amount: amount ?? 0,
+                ));
+              }),
             ],
           ),
           const SizedBox(height: 20),
@@ -252,13 +259,16 @@ class _Item extends StatelessWidget {
     Key? key,
     required this.title,
     required this.amount,
+    required this.isEuro,
   }) : super(key: key);
 
   final String title;
   final int amount;
+  final bool isEuro;
 
   @override
   Widget build(BuildContext context) {
+    final symbol = isEuro ? '€ ' : '\$ ';
     return Row(
       children: [
         Expanded(
@@ -284,7 +294,7 @@ class _Item extends StatelessWidget {
               ),
               Text(
                 NumberFormat.currency(
-                        locale: 'en_US', symbol: '\$ ', decimalDigits: 0)
+                        locale: 'en_US', symbol: symbol, decimalDigits: 0)
                     .format(amount),
                 style: const TextStyle(
                     fontSize: 18,
