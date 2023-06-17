@@ -14,8 +14,8 @@ class ExpenseController extends GetxController {
 
   List<Expense> get expensesList => _expenses.value;
   List<Expense> get expensesHistory => _expensesHistory.value;
-  Map<String, List<int>> get lastExpensesHistory {
-    final Map<String, List<int>> list = {};
+  Map<String, List<double>> get lastExpensesHistory {
+    final Map<String, List<double>> list = {};
     final date = DateTime.now();
     final currentFormatDate = '${date.year}${date.month}';
     final dateLastMonth = DateTime.now().subtract(const Duration(days: 30));

@@ -34,12 +34,12 @@ class WalletsSection extends StatelessWidget {
 
               final balance =
                   isEuro ? ctrlBalance?.euro ?? 0 : ctrlBalance?.value;
-              final total = BalanceController.to.wallet.fold<int>(
+              final total = BalanceController.to.wallet.fold<double>(
                   0,
                   (prev, element) =>
                       prev + (isEuro ? element.euro ?? 0 : element.value));
-              final int overage = total - (balance ?? 0);
-              final int diff = overage - PocketController.to.totalPocketRest;
+              final double overage = total - (balance ?? 0);
+              final double diff = overage - PocketController.to.totalPocketRest;
               final bool isNegative = diff < 0;
               return Column(children: [
                 Row(

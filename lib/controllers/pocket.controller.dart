@@ -31,20 +31,20 @@ class PocketController extends GetxController {
     return _getPockets(false);
   }
 
-  int get totalPocketRest {
+  double get totalPocketRest {
     return getTotal(pocketRest);
   }
 
-  int get totalPocketSaved {
+  double get totalPocketSaved {
     return getTotal(pocketSaved);
   }
 
-  int get totalPockets {
+  double get totalPockets {
     return getTotal(pocket);
   }
 
-  Map<String, int> get balanceInWallets {
-    final res = pocket.fold<Map<String, int>>({}, (previousValue, element) {
+  Map<String, double> get balanceInWallets {
+    final res = pocket.fold<Map<String, double>>({}, (previousValue, element) {
       final prev = previousValue[element.location] ?? 0;
       previousValue[element.location] = prev + element.value;
       return previousValue;
@@ -66,8 +66,8 @@ class PocketController extends GetxController {
     return pockets;
   }
 
-  int getTotal(List<Pocket> pockets) {
-    return pockets.fold<int>(
+  double getTotal(List<Pocket> pockets) {
+    return pockets.fold<double>(
         0, (previousValue, element) => previousValue + element.value);
   }
 
@@ -80,7 +80,7 @@ class PocketController extends GetxController {
     final value =
         updateValue.value.isNotEmpty ? updateValue.value : newValue.value;
     final previousValue = pocket.value;
-    pocket.value = int.parse(value);
+    pocket.value = double.parse(value);
     pocket.restOfBalance = restOfBalance.value;
     pocket.name = titleController.text;
     pocket.location = locationController.text;
@@ -108,11 +108,11 @@ class PocketController extends GetxController {
     switch (operation) {
       case Operation.sum:
         updateValue.value =
-            (pocket.value + int.parse(newValue.value)).toString();
+            (pocket.value + double.parse(newValue.value)).toString();
         break;
       case Operation.rest:
         updateValue.value =
-            (pocket.value - int.parse(newValue.value)).toString();
+            (pocket.value - double.parse(newValue.value)).toString();
         break;
     }
 

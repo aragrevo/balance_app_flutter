@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:balance_app/utils/format.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 Expense expenseFromJson(String str) => Expense.fromJson(json.decode(str));
 
@@ -16,21 +15,24 @@ class Expense {
     this.observation,
     this.id,
   });
-  int cost;
+  double cost;
   String date;
   String description;
   int quantity;
   String? observation;
   String? id;
 
-  factory Expense.fromJson(Map<String, dynamic> json) => Expense(
-        cost: json["cost"],
-        date: json["date"],
-        description: json['description'].toString().split("_")[0].toCapitalize,
-        quantity: json["quantity"],
-        observation: json["observation"],
-        id: json["id"],
-      );
+  factory Expense.fromJson(Map<String, dynamic> json) {
+    final cost = '${json['cost'] ?? 0}';
+    return Expense(
+      cost: double.parse(cost),
+      date: json["date"],
+      description: json['description'].toString().split("_")[0].toCapitalize,
+      quantity: json["quantity"],
+      observation: json["observation"],
+      id: json["id"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "cost": cost,

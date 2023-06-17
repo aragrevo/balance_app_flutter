@@ -15,7 +15,7 @@ class Pocket {
       required this.restOfBalance,
       this.money,
       this.id});
-  int value;
+  double value;
   String name;
   String location;
   bool restOfBalance;
@@ -23,7 +23,7 @@ class Pocket {
   Money? money;
 
   factory Pocket.fromJson(Map<String, dynamic> json) => Pocket(
-        value: int.parse(json["value"].toString()),
+        value: double.parse(json["value"].toString()),
         name: json['name'].toString().toCapitalize,
         id: json["id"],
         money: json["money"],

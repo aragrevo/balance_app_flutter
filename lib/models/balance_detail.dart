@@ -14,22 +14,31 @@ class BalanceDetail {
       this.euro,
       required this.observation,
       required this.id});
-  int value;
+  double value;
   String name;
   String? icon;
   int? position;
   String id;
   String observation;
-  int? euro;
+  double? euro;
 
-  factory BalanceDetail.fromJson(Map<String, dynamic> json) => BalanceDetail(
-      value: json["value"],
-      name: json['name'],
-      icon: json["icon"],
-      id: json["id"],
-      observation: json["observation"],
-      position: json["position"],
-      euro: json["euro"]);
+  factory BalanceDetail.fromJson(Map<String, dynamic> json) {
+    final euro = '${json['euro'] ?? 0}';
+    final pesos = '${json['value'] ?? 0}';
+    try {
+      return BalanceDetail(
+          value: double.parse(pesos),
+          euro: double.parse(euro),
+          name: json['name'],
+          icon: json["icon"],
+          id: json["id"],
+          observation: json["observation"],
+          position: json["position"]);
+    } catch (e) {
+      print('error $e');
+      return BalanceDetail(id: '', name: '', observation: '', value: 0);
+    }
+  }
 
   Map<String, dynamic> toJson() => {
         "value": value,

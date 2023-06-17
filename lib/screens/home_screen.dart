@@ -263,7 +263,7 @@ class _Item extends StatelessWidget {
   }) : super(key: key);
 
   final String title;
-  final int amount;
+  final double amount;
   final bool isEuro;
 
   @override

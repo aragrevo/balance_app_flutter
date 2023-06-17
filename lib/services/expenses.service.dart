@@ -58,6 +58,7 @@ class ExpensesService {
     try {
       final obj = expense.toJson();
       obj['userId'] = authSvc.user!.id;
+      obj['money'] = authSvc.money;
       await _firestore.collection('expenses').add(obj);
     } catch (err) {
       print(err);

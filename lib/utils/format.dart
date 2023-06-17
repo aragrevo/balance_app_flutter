@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 String toCurrency(dynamic value, {Money? money}) {
   if (value == null || value == '') return '';
   if (value is String) {
-    value = int.parse(value);
+    value = double.parse(value);
   }
   final isEuro = money == Money.eur;
   final symbol = isEuro ? '€ ' : '\$ ';

@@ -16,8 +16,8 @@ class Log {
     this.previousValue,
     this.description,
   });
-  int value;
-  int? previousValue;
+  double value;
+  double? previousValue;
   String name;
   String location;
   String date;
@@ -26,8 +26,8 @@ class Log {
 
   factory Log.fromJson(Map<String, dynamic> json) => Log(
         value: json["value"] != null
-            ? int.parse(json["value"].toString())
-            : int.parse(json["cost"].toString()),
+            ? double.parse(json["value"].toString())
+            : double.parse(json["cost"].toString()),
         name: json['name'] != null
             ? json['name'].toString().toCapitalize
             : json['description'],

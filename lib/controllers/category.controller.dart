@@ -53,7 +53,7 @@ class CategoryController extends GetxController {
     isSaving.value = true;
     final d = (date.value == null) ? DateTime.now() : date.value;
     final data = Expense(
-        cost: int.parse(amount.value),
+        cost: double.parse(amount.value),
         date: d!.toIso8601String(),
         description: category.value,
         observation: observation.value.isEmpty ? null : observation.value,
@@ -79,7 +79,7 @@ class CategoryController extends GetxController {
     isSaving.value = true;
     final d = (date.value == null) ? DateTime.now() : date.value;
     final data = Expense(
-        cost: int.parse(amount.value),
+        cost: double.parse(amount.value),
         date: d!.toIso8601String(),
         description: category.value,
         id: id,
@@ -88,7 +88,7 @@ class CategoryController extends GetxController {
 
     final saved = await ExpenseController.to.updateExpense(data);
     if (!saved) return;
-    data.cost = int.parse(amount.value) - int.parse(previousAmount.value);
+    data.cost = double.parse(amount.value) - double.parse(previousAmount.value);
     await updateTotals(data);
   }
 

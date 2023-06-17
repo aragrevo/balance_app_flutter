@@ -34,7 +34,7 @@ class BalanceController extends GetxController {
     }
     final value =
         updateValue.value.isNotEmpty ? updateValue.value : newValue.value;
-    wallet.value = int.parse(value);
+    wallet.value = double.parse(value);
     final saved = await BalanceService().saveBalance(wallet.id!, wallet);
     if (saved) {
       Get.back();
@@ -51,11 +51,11 @@ class BalanceController extends GetxController {
     switch (operation) {
       case Operation.sum:
         updateValue.value =
-            (wallet.value + int.parse(newValue.value)).toString();
+            (wallet.value + double.parse(newValue.value)).toString();
         break;
       case Operation.rest:
         updateValue.value =
-            (wallet.value - int.parse(newValue.value)).toString();
+            (wallet.value - double.parse(newValue.value)).toString();
         break;
     }
 
