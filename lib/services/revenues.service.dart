@@ -12,6 +12,7 @@ class RevenuesService {
     try {
       final obj = expense.toJson();
       obj['userId'] = authSvc.user!.id;
+      obj['money'] = authSvc.money?.name;
       await _firestore.collection('revenues').add(obj);
     } catch (err) {
       print(err);
