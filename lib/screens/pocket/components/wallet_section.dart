@@ -155,6 +155,7 @@ class _WalletState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authSvc = Provider.of<AuthService>(context, listen: false);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -182,7 +183,9 @@ class _WalletState extends StatelessWidget {
                 ),
                 child: Center(
                   child: _VerticalText(
-                    text: toSmallCurrency(wallet.value),
+                    text: authSvc.isEuro
+                        ? toCurrency(wallet.value, money: authSvc.money)
+                        : toSmallCurrency(wallet.value),
                     color: Colors.white,
                     size: 16,
                   ),

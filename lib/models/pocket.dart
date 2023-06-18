@@ -26,7 +26,7 @@ class Pocket {
         value: double.parse(json["value"].toString()),
         name: json['name'].toString().toCapitalize,
         id: json["id"],
-        money: json["money"],
+        money: json["money"] == Money.eur.name ? Money.eur : Money.cop,
         location: json["location"],
         restOfBalance: json["restOfBalance"] ?? false,
       );

@@ -19,6 +19,8 @@ class AuthService with ChangeNotifier {
     notifyListeners();
   }
 
+  bool get isEuro => money == Money.eur;
+
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
       'email',

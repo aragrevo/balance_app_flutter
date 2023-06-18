@@ -21,6 +21,7 @@ class PocketScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authSvc = Provider.of<AuthService>(context, listen: false);
+    final money = authSvc.money;
     return Positioned.fill(
       child: Container(
         color: Colors.white,
@@ -44,7 +45,8 @@ class PocketScreen extends StatelessWidget {
                             return _ListSection(
                               title: 'Rest of balance',
                               amount: toCurrency(
-                                  PocketController.to.totalPocketRest),
+                                  PocketController.to.totalPocketRest,
+                                  money: money),
                               pockets: PocketController.to.pocketRest,
                             );
                           }),
@@ -52,7 +54,8 @@ class PocketScreen extends StatelessWidget {
                             return _ListSection(
                               title: 'Saved pockets',
                               amount: toCurrency(
-                                  PocketController.to.totalPocketSaved),
+                                  PocketController.to.totalPocketSaved,
+                                  money: money),
                               pockets: PocketController.to.pocketSaved,
                             );
                           }),
@@ -108,7 +111,8 @@ class PocketScreen extends StatelessWidget {
                                               color: ThemeColors.to.black,
                                             )),
                                         trailing: Text(
-                                          toCurrency(item.value),
+                                          toCurrency(item.value,
+                                              money: authSvc.money),
                                           style: TextStyle(
                                               color: ThemeColors.to.black,
                                               fontSize: 16,
