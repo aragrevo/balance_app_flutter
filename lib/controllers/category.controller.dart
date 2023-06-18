@@ -70,9 +70,15 @@ class CategoryController extends GetxController {
       return;
     }
 
-    final saved = await ExpenseController.to.saveExpense(data);
-    if (!saved) return;
-    await updateTotals(data);
+    try {
+      final saved = await ExpenseController.to.saveExpense(data);
+      isSaving.value = false;
+      if (!saved) return;
+      await updateTotals(data);
+    } catch (e) {
+      Get.defaultDialog(title: 'Error', content: Text(e.toString()));
+      isSaving.value = false;
+    }
   }
 
   Future<void> updateTransaction(String id) async {

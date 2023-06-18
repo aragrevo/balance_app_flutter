@@ -6,9 +6,13 @@ import 'package:balance_app/models/wallet.dart';
 import 'package:balance_app/services/balance.service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+
+import '../services/auth_service.dart';
 
 class BalanceController extends GetxController {
   static BalanceController get to => Get.find();
+  final authSvc = Provider.of<AuthService>(Get.context!, listen: false);
   final Rxn<Balance> _balance = Rxn<Balance>();
   final RxList<Wallet> _wallet = RxList<Wallet>();
 
@@ -74,9 +78,14 @@ class BalanceController extends GetxController {
     if (obj == null) return;
     final currentMonth = BalanceService().getCurrentMonth();
     final category = type == 'revenue' ? obj.revenue : obj.expense;
-    category.value += data.cost;
     category.observation = data.date;
-    obj.balance.value = obj.revenue.value - obj.expense.value;
+    if (authSvc.money == Money.eur) {
+      category.euro = (category.euro ?? 0) + data.cost;
+      obj.balance.euro = (obj.revenue.euro ?? 0) - (obj.expense.euro ?? 0);
+    } else {
+      category.value += data.cost;
+      obj.balance.value = obj.revenue.value - obj.expense.value;
+    }
     obj.balance.observation = data.date;
     await BalanceService().saveTotals(currentMonth, obj);
   }

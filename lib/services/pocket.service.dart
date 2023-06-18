@@ -11,7 +11,7 @@ class PocketService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final authSvc = Provider.of<AuthService>(Get.context!, listen: false);
   Stream<List<Pocket>> pocketStream() {
-    final money = authSvc.money == Money.eur ? Money.eur : null;
+    final money = authSvc.money == Money.eur ? Money.eur.name : null;
     return _firestore
         .collection('pockets')
         .where('userId', isEqualTo: authSvc.user!.id)
@@ -36,6 +36,7 @@ class PocketService {
     try {
       final obj = data.toJson();
       obj['userId'] = authSvc.user!.id;
+      obj['money'] = authSvc.money?.name;
       (id == null || id.isEmpty)
           ? await instance.add(obj)
           : await instance.doc(id).set(obj);

@@ -16,7 +16,7 @@ class ExpensesService {
   Stream<List<Expense>> expenseStream() {
     final year = DateTime.now().year;
     final month = DateTime.now().month;
-    final money = authSvc.money == Money.eur ? Money.eur : null;
+    final money = authSvc.money == Money.eur ? Money.eur.name : null;
     return _firestore
         .collection('expenses')
         .where('userId', isEqualTo: authSvc.user!.id)
@@ -58,7 +58,7 @@ class ExpensesService {
     try {
       final obj = expense.toJson();
       obj['userId'] = authSvc.user!.id;
-      obj['money'] = authSvc.money;
+      obj['money'] = authSvc.money?.name;
       await _firestore.collection('expenses').add(obj);
     } catch (err) {
       print(err);
@@ -70,6 +70,7 @@ class ExpensesService {
     try {
       final obj = expense.toJson();
       obj['userId'] = authSvc.user!.id;
+      obj['money'] = authSvc.money?.name;
       await _firestore.collection('expenses').doc(expense.id).set(obj);
     } catch (err) {
       print(err);

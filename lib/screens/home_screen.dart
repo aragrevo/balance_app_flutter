@@ -154,6 +154,7 @@ class _BalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authSvc = Provider.of<AuthService>(context, listen: false);
+    final value = authSvc.money == Money.eur ? balance?.euro : balance?.value;
     return Positioned(
       top: 100,
       left: 30,
@@ -182,7 +183,7 @@ class _BalanceCard extends StatelessWidget {
                   style: TextStyle(
                       color: Colors.black54, fontWeight: FontWeight.w600)),
               const SizedBox(width: 10),
-              Text(toCurrency(balance?.value, money: authSvc.money),
+              Text(toCurrency(value, money: authSvc.money),
                   style: const TextStyle(
                       color: Colors.black,
                       fontSize: 25,

@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class Account {
   GoogleSignInAccount? googleUser;
-  Money? money = Money.eur;
+  Money? money;
   Account({required this.googleUser, this.money});
 }
 
