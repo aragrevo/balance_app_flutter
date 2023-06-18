@@ -38,9 +38,11 @@ class ExpensesService {
   }
 
   Stream<List<Expense>> expenseHistoryStream() {
+    final money = authSvc.money == Money.eur ? Money.eur.name : null;
     return _firestore
         .collection('expenses')
         .where('userId', isEqualTo: authSvc.user!.id)
+        .where('money', isEqualTo: money)
         .orderBy('date', descending: true)
         .snapshots()
         .map((QuerySnapshot query) {
