@@ -1,6 +1,7 @@
 import 'package:balance_app/controllers/pocket.controller.dart';
 import 'package:balance_app/services/services.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/format.dart';
@@ -23,13 +24,16 @@ class Have extends StatelessWidget {
               style: TextStyle(
                 color: ThemeColors.to.black,
               )),
-          trailing: Text(
-            toCurrency(PocketController.to.totalPockets, money: authSvc.money),
-            style: TextStyle(
-                color: ThemeColors.to.black,
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
-          ),
+          trailing: Obx(() {
+            return Text(
+              toCurrency(PocketController.to.totalPockets,
+                  money: authSvc.money),
+              style: TextStyle(
+                  color: ThemeColors.to.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            );
+          }),
         ),
       ),
     );
