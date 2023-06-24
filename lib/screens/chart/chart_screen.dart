@@ -227,7 +227,7 @@ class _ExpensesChart extends StatelessWidget {
           x: i,
           barRods: e.value.reversed.mapIndexed((index, element) {
             return BarChartRodData(
-              toY: element.toDouble(),
+              toY: roundDouble(element, 2),
               color: colors[index],
               width: 7,
             );

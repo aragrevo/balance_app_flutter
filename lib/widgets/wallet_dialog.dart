@@ -43,8 +43,8 @@ class WalletDialog extends StatelessWidget {
           const Divider(),
           Obx(() => TextFormField(
                 initialValue: BalanceController.to.newValue.value,
-                onChanged: (value) =>
-                    BalanceController.to.newValue.value = value,
+                onChanged: (valueField) =>
+                    BalanceController.to.newValue.value = valueField,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'New value',

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:balance_app/models/balance_detail.dart';
 import 'package:intl/intl.dart';
 
@@ -33,4 +35,9 @@ extension DateUtil on DateTime {
   String get formatDate {
     return DateFormat('dd/MM/yyyy').format(this);
   }
+}
+
+double roundDouble(double value, int places) {
+  num mod = pow(10.0, places);
+  return ((value * mod).round().toDouble() / mod);
 }

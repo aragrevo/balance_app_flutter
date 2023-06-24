@@ -40,7 +40,7 @@ class WalletsSection extends StatelessWidget {
                       prev + (isEuro ? element.euro ?? 0 : element.value));
               final double overage = total - (balance ?? 0);
               final double diff = overage - PocketController.to.totalPocketRest;
-              final bool isNegative = diff < 0;
+              final bool isNegative = diff.floor() < 0;
               return Column(children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

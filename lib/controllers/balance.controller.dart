@@ -56,14 +56,15 @@ class BalanceController extends GetxController {
       return;
     }
 
+    final oldValue = authSvc.isEuro ? wallet.euro ?? 0 : wallet.value;
     switch (operation) {
       case Operation.sum:
         updateValue.value =
-            (wallet.value + double.parse(newValue.value)).toString();
+            (oldValue + double.parse(newValue.value)).toString();
         break;
       case Operation.rest:
         updateValue.value =
-            (wallet.value - double.parse(newValue.value)).toString();
+            (oldValue - double.parse(newValue.value)).toString();
         break;
     }
 
