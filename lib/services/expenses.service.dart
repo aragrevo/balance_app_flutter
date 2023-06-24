@@ -16,7 +16,7 @@ class ExpensesService {
   Stream<List<Expense>> expenseStream() {
     final year = DateTime.now().year;
     final month = DateTime.now().month;
-    final money = authSvc.money == Money.eur ? Money.eur.name : null;
+    final money = authSvc.isEuro ? Money.eur.name : null;
     return _firestore
         .collection('expenses')
         .where('userId', isEqualTo: authSvc.user!.id)
@@ -27,6 +27,9 @@ class ExpensesService {
       List<Expense> retVal = [];
       query.docs.forEach((doc) {
         final expense = doc.data() as Map<String, dynamic>;
+        if (!authSvc.isEuro && expense['money'] == Money.eur.name) {
+          return;
+        }
         expense['id'] = doc.id;
         final expenseDate = DateTime.parse(expense['date']);
         if (expenseDate.year == year && expenseDate.month == month) {
@@ -49,6 +52,9 @@ class ExpensesService {
       List<Expense> retVal = [];
       query.docs.forEach((doc) {
         final expense = doc.data() as Map<String, dynamic>;
+        if (!authSvc.isEuro && expense['money'] == Money.eur.name) {
+          return;
+        }
         expense['id'] = doc.id;
         retVal.add(Expense.fromJson(expense));
       });

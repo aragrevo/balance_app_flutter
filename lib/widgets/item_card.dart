@@ -1,5 +1,6 @@
 import 'package:balance_app/controllers/category.controller.dart';
 import 'package:balance_app/models/expense.dart';
+import 'package:balance_app/services/auth_service.dart';
 import 'package:balance_app/services/expenses.service.dart';
 import 'package:balance_app/utils/format.dart';
 import 'package:balance_app/utils/icons.dart';
@@ -7,6 +8,7 @@ import 'package:balance_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ItemCard extends StatelessWidget {
   final Expense item;
@@ -17,6 +19,8 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authSvc = Provider.of<AuthService>(context, listen: false);
+
     final title = item.observation ?? item.description;
     final subtitle =
         DateFormat().add_yMMMEd().format(DateTime.parse(item.date));
@@ -34,10 +38,7 @@ class ItemCard extends StatelessWidget {
         title: Row(
           children: [
             Expanded(child: Text(title.toCapitalize), flex: 1),
-            Text(
-                NumberFormat.currency(
-                        locale: 'en_US', symbol: '💲', decimalDigits: 0)
-                    .format(item.cost),
+            Text(toCurrency(item.cost, money: authSvc.money),
                 style: const TextStyle(fontWeight: FontWeight.w600)),
           ],
         ),

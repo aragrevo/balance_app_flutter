@@ -21,6 +21,9 @@ class PocketService {
       List<Pocket> retVal = [];
       query.docs.forEach((doc) {
         final pocket = doc.data() as Map<String, dynamic>;
+        if (!authSvc.isEuro && pocket['money'] == Money.eur.name) {
+          return;
+        }
         pocket['id'] = doc.id;
         if (pocket['name'] != null) {
           retVal.add(Pocket.fromJson(pocket));

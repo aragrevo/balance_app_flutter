@@ -12,7 +12,6 @@ import 'package:balance_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 // TODO: Search functionality
 
@@ -204,7 +203,7 @@ class _Summary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authSvc = Provider.of<AuthService>(context, listen: false);
-    final isEuro = authSvc.money == Money.eur;
+    final money = authSvc.money;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
@@ -228,20 +227,20 @@ class _Summary extends StatelessWidget {
             children: [
               Obx(() {
                 final revenue = BalanceController.to.balance?.revenue;
-                final amount = isEuro ? revenue?.euro : revenue?.value;
+                final amount = authSvc.isEuro ? revenue?.euro : revenue?.value;
                 return Expanded(
                     child: _Item(
-                  isEuro: isEuro,
+                  money: money,
                   title: 'Income',
                   amount: amount ?? 0,
                 ));
               }),
               Obx(() {
                 final expense = BalanceController.to.balance?.expense;
-                final amount = isEuro ? expense?.euro : expense?.value;
+                final amount = authSvc.isEuro ? expense?.euro : expense?.value;
                 return Expanded(
                     child: _Item(
-                  isEuro: isEuro,
+                  money: money,
                   title: 'Expenses',
                   amount: amount ?? 0,
                 ));
@@ -260,16 +259,16 @@ class _Item extends StatelessWidget {
     Key? key,
     required this.title,
     required this.amount,
-    required this.isEuro,
+    required this.money,
   }) : super(key: key);
 
   final String title;
   final double amount;
-  final bool isEuro;
+  final Money? money;
 
   @override
   Widget build(BuildContext context) {
-    final symbol = isEuro ? '€ ' : '\$ ';
+    final symbol = money == Money.eur ? '€ ' : '\$ ';
     return Row(
       children: [
         Expanded(
@@ -294,9 +293,7 @@ class _Item extends StatelessWidget {
                 style: const TextStyle(color: Colors.white70),
               ),
               Text(
-                NumberFormat.currency(
-                        locale: 'en_US', symbol: symbol, decimalDigits: 0)
-                    .format(amount),
+                toCurrency(amount, money: money),
                 style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

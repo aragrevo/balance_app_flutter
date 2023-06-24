@@ -38,7 +38,11 @@ class BalanceController extends GetxController {
     }
     final value =
         updateValue.value.isNotEmpty ? updateValue.value : newValue.value;
-    wallet.value = double.parse(value);
+    if (authSvc.isEuro) {
+      wallet.euro = double.parse(value);
+    } else {
+      wallet.value = double.parse(value);
+    }
     final saved = await BalanceService().saveBalance(wallet.id!, wallet);
     if (saved) {
       Get.back();

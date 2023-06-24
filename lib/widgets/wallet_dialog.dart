@@ -1,11 +1,13 @@
 import 'package:balance_app/controllers/balance.controller.dart';
 import 'package:balance_app/controllers/pocket.controller.dart';
 import 'package:balance_app/models/wallet.dart';
+import 'package:balance_app/services/auth_service.dart';
 import 'package:balance_app/utils/format.dart';
 import 'package:balance_app/utils/icons.dart';
 import 'package:balance_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class WalletDialog extends StatelessWidget {
   const WalletDialog({Key? key, required this.wallet}) : super(key: key);
@@ -14,6 +16,8 @@ class WalletDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authSvc = Provider.of<AuthService>(context, listen: false);
+    final value = authSvc.isEuro ? wallet.euro : wallet.value;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
@@ -22,7 +26,7 @@ class WalletDialog extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Previous value'),
-              Text(toCurrency(wallet.value)),
+              Text(toCurrency(value)),
             ],
           ),
           const CustomSpacer(10),

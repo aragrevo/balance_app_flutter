@@ -9,7 +9,7 @@ String toCurrency(dynamic value, {Money? money}) {
   final isEuro = money == Money.eur;
   final symbol = isEuro ? '€ ' : '\$ ';
   return NumberFormat.currency(
-          locale: 'en_US', symbol: symbol, decimalDigits: 0)
+          locale: 'en_US', symbol: symbol, decimalDigits: isEuro ? 2 : 0)
       .format(value);
 }
 
