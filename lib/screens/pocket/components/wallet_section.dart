@@ -89,6 +89,7 @@ class WalletsSection extends StatelessWidget {
                                 PocketController.to.resetForm();
                                 Get.bottomSheet(
                                     PocketForm(
+                                        money: authSvc.money!,
                                         pocket: Pocket(
                                             value: 0,
                                             name: '',

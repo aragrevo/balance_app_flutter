@@ -102,10 +102,12 @@ class PocketScreen extends StatelessWidget {
                                   itemCount: list.length,
                                   itemBuilder: (context, index) {
                                     final item = list[index];
+                                    final icon =
+                                        pocketIcons[item.key.toLowerCase()] ??
+                                            Icons.image_not_supported_outlined;
                                     return Card(
                                       child: ListTile(
-                                        leading: Icon(pocketIcons[
-                                            item.key.toLowerCase()]),
+                                        leading: Icon(icon),
                                         title: Text(item.key.toCapitalize,
                                             style: TextStyle(
                                               color: ThemeColors.to.black,
@@ -193,6 +195,7 @@ class _PocketList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authSvc = Provider.of<AuthService>(context, listen: false);
     return ListView.builder(
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
@@ -203,7 +206,11 @@ class _PocketList extends StatelessWidget {
             onTap: () {
               PocketController.to.pocketToDelete.value = null;
               PocketController.to.resetForm();
-              Get.bottomSheet(PocketForm(pocket: pocket),
+              Get.bottomSheet(
+                  PocketForm(
+                    pocket: pocket,
+                    money: authSvc.money!,
+                  ),
                   isScrollControlled: true,
                   backgroundColor: Colors.white,
                   shape: const RoundedRectangleBorder(
@@ -223,7 +230,8 @@ class _PocketList extends StatelessWidget {
                   Positioned(
                     child: CustomCard(
                         title: pocket.name,
-                        subtitle: toCurrency(pocket.value),
+                        subtitle:
+                            toCurrency(pocket.value, money: authSvc.money),
                         isNegative: pocket.value < 0,
                         observation: pocket.location,
                         icon: pocketIcons[pocket.location.toLowerCase()] ??

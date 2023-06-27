@@ -1,4 +1,5 @@
 import 'package:balance_app/controllers/pocket.controller.dart';
+import 'package:balance_app/models/balance_detail.dart';
 import 'package:balance_app/models/pocket.dart';
 import 'package:balance_app/utils/format.dart';
 import 'package:balance_app/utils/icons.dart';
@@ -10,15 +11,18 @@ class PocketForm extends StatelessWidget {
   const PocketForm({
     Key? key,
     required this.pocket,
+    required this.money,
   }) : super(key: key);
 
   final Pocket pocket;
+  final Money money;
 
   @override
   Widget build(BuildContext context) {
     PocketController.to.restOfBalance.value = pocket.restOfBalance;
     PocketController.to.titleController.text = pocket.name;
     PocketController.to.locationController.text = pocket.location;
+
     return Container(
       padding: const EdgeInsets.all(16),
       height: Get.height / 1.7,
@@ -35,7 +39,7 @@ class PocketForm extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Previous value'),
-                Text(toCurrency(pocket.value)),
+                Text(toCurrency(pocket.value, money: money)),
               ],
             ),
             const CustomSpacer(10),
@@ -44,7 +48,8 @@ class PocketForm extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Update value'),
-                      Text(toCurrency(PocketController.to.updateValue.value)),
+                      Text(toCurrency(PocketController.to.updateValue.value,
+                          money: money)),
                     ],
                   )
                 : const SizedBox()),
