@@ -8,6 +8,7 @@ import 'package:balance_app/screens/screens.dart';
 import 'package:balance_app/screens/transaction_screen.dart';
 import 'package:balance_app/services/services.dart';
 import 'package:balance_app/utils/format.dart';
+import 'package:balance_app/widgets/fade_indexed_stack.dart';
 import 'package:balance_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -78,14 +79,13 @@ class _Home extends StatelessWidget {
             child: const SettingsDrawer()),
         endDrawerEnableOpenDragGesture: false,
         body: Obx(() {
-          return IndexedStack(
-            index: HomeController.to.currentIndex.value,
-            children: [
-              const _Body(),
-              PocketScreen(),
-              const ChartScreen(),
-            ],
-          );
+          return FadeIndexedStack(
+              index: HomeController.to.currentIndex.value,
+              children: [
+                const _Body(),
+                PocketScreen(),
+                const ChartScreen(),
+              ]);
         }));
   }
 }

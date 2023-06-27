@@ -155,6 +155,9 @@ class MoneyCard extends StatelessWidget {
                     image: AssetImage('assets/images/$text.png'),
                     width: 100,
                     height: 100,
+                    fit: BoxFit.fitWidth,
+                    color: isSelected ? Colors.white.withOpacity(0.7) : null,
+                    colorBlendMode: BlendMode.modulate,
                   ),
                 ),
                 Text(
