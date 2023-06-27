@@ -93,23 +93,26 @@ class _Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 70,
-      child: ElevatedButton(
-        child: const Text('Continue'),
-        onPressed: () async {
-          Get.offNamedUntil(HomeScreen.routeName, (route) => false);
-        },
-        style: ElevatedButton.styleFrom(
-            primary: Colors.yellow,
-            onPrimary: Colors.black,
-            shadowColor: Colors.yellowAccent,
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0)),
-            textStyle:
-                const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+    return Hero(
+      tag: 'btn-home',
+      child: SizedBox(
+        width: double.infinity,
+        height: 70,
+        child: ElevatedButton(
+          child: const Text('Continue'),
+          onPressed: () async {
+            Get.offNamedUntil(HomeScreen.routeName, (route) => false);
+          },
+          style: ElevatedButton.styleFrom(
+              primary: Colors.yellow,
+              onPrimary: Colors.black,
+              shadowColor: Colors.yellowAccent,
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0)),
+              textStyle:
+                  const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+        ),
       ),
     );
   }

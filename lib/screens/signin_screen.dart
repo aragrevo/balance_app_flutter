@@ -55,33 +55,36 @@ class SigninScreen extends StatelessWidget {
                         color: Colors.white),
                   ),
                   const SizedBox(height: 70),
-                  SizedBox(
-                      width: double.infinity,
-                      height: 70,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.yellow,
-                            onPrimary: Colors.black,
-                            shadowColor: Colors.yellowAccent,
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0)),
-                            textStyle: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w600)),
-                        onPressed: authSvc.isLoading
-                            ? null
-                            : () async {
-                                final account =
-                                    await authSvc.signInWithGoogle();
-                                if (account != null) {
-                                  Navigator.of(context)
-                                      .pushReplacementNamed('welcome');
-                                }
-                              },
-                        child: authSvc.isLoading
-                            ? const CircularProgressIndicator()
-                            : const Text('Sign up'),
-                      )),
+                  Hero(
+                    tag: 'btn-home',
+                    child: SizedBox(
+                        width: double.infinity,
+                        height: 70,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.yellow,
+                              onPrimary: Colors.black,
+                              shadowColor: Colors.yellowAccent,
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0)),
+                              textStyle: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w600)),
+                          onPressed: authSvc.isLoading
+                              ? null
+                              : () async {
+                                  final account =
+                                      await authSvc.signInWithGoogle();
+                                  if (account != null) {
+                                    Navigator.of(context)
+                                        .pushReplacementNamed('welcome');
+                                  }
+                                },
+                          child: authSvc.isLoading
+                              ? const CircularProgressIndicator()
+                              : const Text('Sign up'),
+                        )),
+                  ),
                 ])),
           ],
         ),

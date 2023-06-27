@@ -84,9 +84,8 @@ class SettingsDrawer extends StatelessWidget {
                           onTap: () async {
                             final money = isEuro ? Money.cop : Money.eur;
                             authSvc.money = money;
-                            await authSvc.signOut();
                             Get.offNamedUntil(
-                                SigninScreen.routeName, (route) => false);
+                                HomeScreen.routeName, (route) => false);
                           },
                           leading: Icon(isEuro
                               ? Icons.euro
