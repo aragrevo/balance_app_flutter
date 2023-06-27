@@ -75,7 +75,7 @@ class SigninScreen extends StatelessWidget {
                                     await authSvc.signInWithGoogle();
                                 if (account != null) {
                                   Navigator.of(context)
-                                      .pushReplacementNamed('home');
+                                      .pushReplacementNamed('welcome');
                                 }
                               },
                         child: authSvc.isLoading

@@ -1,3 +1,4 @@
+import 'package:balance_app/screens/home/welcome.screen.dart';
 import 'package:balance_app/screens/logs_screen.dart';
 import 'package:balance_app/screens/screens.dart';
 import 'package:balance_app/screens/transaction_screen.dart';
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
           initialRoute: SigninScreen.routeName,
           getPages: [
             GetPage(name: HomeScreen.routeName, page: () => const HomeScreen()),
+            GetPage(
+                name: WelcomeScreen.routeName,
+                page: () => const WelcomeScreen()),
             GetPage(
                 name: LoginScreen.routeName, page: () => const LoginScreen()),
             GetPage(
