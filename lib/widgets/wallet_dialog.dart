@@ -54,6 +54,7 @@ class WalletDialog extends StatelessWidget {
                   if (value == null) {
                     return 'Por favor ingrese un monto';
                   }
+                  return null;
                 },
               )),
           const CustomSpacer(10),

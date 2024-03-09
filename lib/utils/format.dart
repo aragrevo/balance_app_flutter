@@ -25,6 +25,12 @@ extension StringUtil on String {
   String get toCapitalize {
     return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
+
+  String get toHuman {
+    final number = num.tryParse(this);
+    if (number == null) return this;
+    return NumberFormat.compact(locale: 'es_CO').format(number);
+  }
 }
 
 extension DateUtil on DateTime {

@@ -22,6 +22,7 @@ class PocketController extends GetxController {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
 
+  // ignore: invalid_use_of_protected_member
   List<Pocket> get pocket => _pocket.value;
   List<Pocket> get pocketRest {
     return _getPockets(true);
@@ -54,6 +55,7 @@ class PocketController extends GetxController {
 
   @override
   void onInit() {
+    super.onInit();
     _pocket.bindStream(PocketService().pocketStream());
     _pocketRest.bindStream(PocketService().pocketStream());
     _pocketSave.bindStream(PocketService().pocketStream());

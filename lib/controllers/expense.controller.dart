@@ -12,7 +12,9 @@ class ExpenseController extends GetxController {
   final RxList<Expense> _expensesHistory = RxList<Expense>();
   var isSaving = false.obs;
 
+  // ignore: invalid_use_of_protected_member
   List<Expense> get expensesList => _expenses.value;
+  // ignore: invalid_use_of_protected_member
   List<Expense> get expensesHistory => _expensesHistory.value;
   Map<String, List<double>> get lastExpensesHistory {
     final Map<String, List<double>> list = {};
@@ -29,6 +31,7 @@ class ExpenseController extends GetxController {
       lastFormatDate: 1,
       secondLastFormatDate: 2
     };
+    // ignore: invalid_use_of_protected_member, avoid_function_literals_in_foreach_calls
     _expensesHistory.value.forEach((expense) {
       final expenseDate = DateTime.parse(expense.date);
       final expenseFormatDate = '${expenseDate.year}${expenseDate.month}';
@@ -48,6 +51,7 @@ class ExpenseController extends GetxController {
 
   @override
   void onInit() {
+    super.onInit();
     _expenses.bindStream(ExpensesService().expenseStream());
     _expensesHistory.bindStream(ExpensesService().expenseHistoryStream());
   }

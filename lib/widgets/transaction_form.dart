@@ -29,9 +29,11 @@ class TransactionForm extends StatelessWidget {
                   if (value == null) {
                     return 'Por favor seleccione un tipo';
                   }
+                  return null;
                 },
                 items: CategoryController.to.categories
                     .map((category) => DropdownMenuItem(
+                          value: category['id'],
                           child: Row(
                             children: [
                               Icon(
@@ -49,7 +51,6 @@ class TransactionForm extends StatelessWidget {
                               ),
                             ],
                           ),
-                          value: category['id'],
                         ))
                     .toList(),
                 onChanged: (value) {
@@ -74,6 +75,7 @@ class TransactionForm extends StatelessWidget {
                           if (value == null || value.isEmpty) {
                             return 'Por favor ingrese una observación';
                           }
+                          return null;
                         },
                       ),
                     ],
@@ -94,6 +96,7 @@ class TransactionForm extends StatelessWidget {
                 if (value == null || value.isEmpty) {
                   return 'Por favor ingrese un monto';
                 }
+                return null;
               },
             ),
           ),
@@ -139,18 +142,18 @@ class TransactionForm extends StatelessWidget {
                                     .updateTransaction(id!)
                                 : await CategoryController.to.saveTransaction();
                           },
-                    child: CategoryController.to.isSaving.value
-                        ? const CircularProgressIndicator()
-                        : Text(id != null ? 'Update' : 'Add transaction'),
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.yellow,
-                        onPrimary: Colors.black,
+                        backgroundColor: Colors.yellow,
+                        foregroundColor: Colors.black,
                         shadowColor: Colors.yellowAccent,
                         elevation: 2,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0)),
                         textStyle: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w600)),
+                    child: CategoryController.to.isSaving.value
+                        ? const CircularProgressIndicator()
+                        : Text(id != null ? 'Update' : 'Add transaction'),
                   ),
                 )),
           ),
@@ -189,15 +192,16 @@ class _TypeField extends StatelessWidget {
           if (value == null) {
             return 'Por favor seleccione un tipo';
           }
+          return null;
         },
         items: const [
           DropdownMenuItem(
-            child: Text('Expense'),
             value: 'expense',
+            child: Text('Expense'),
           ),
           DropdownMenuItem(
-            child: Text('Income'),
             value: 'revenue',
+            child: Text('Income'),
           ),
         ],
         onChanged: (value) {

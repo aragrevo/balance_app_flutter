@@ -1,4 +1,3 @@
-import 'package:balance_app/main.dart';
 import 'package:balance_app/services/services.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
@@ -31,16 +30,16 @@ class SigninScreen extends StatelessWidget {
                     child: const Icon(Icons.person_pin,
                         size: 60, color: Colors.white),
                   )),
-                  Positioned(child: _Bubble(), top: 90, left: 30),
-                  Positioned(child: _Bubble(), top: -40, left: -30),
-                  Positioned(child: _Bubble(), top: -50, right: -20),
-                  Positioned(child: _Bubble(), bottom: 0, left: 10),
-                  Positioned(child: _Bubble(), bottom: 120, right: 20),
+                  Positioned(top: 90, left: 30, child: _Bubble()),
+                  Positioned(top: -40, left: -30, child: _Bubble()),
+                  Positioned(top: -50, right: -20, child: _Bubble()),
+                  Positioned(bottom: 0, left: 10, child: _Bubble()),
+                  Positioned(bottom: 120, right: 20, child: _Bubble()),
                   Positioned(
-                      child: Transform.rotate(
-                          angle: 6 * math.pi / 180, child: _CreditCard()),
                       bottom: 0,
-                      left: 100)
+                      left: 100,
+                      child: Transform.rotate(
+                          angle: 6 * math.pi / 180, child: _CreditCard()))
                 ])),
             Padding(
                 padding:
@@ -62,8 +61,8 @@ class SigninScreen extends StatelessWidget {
                         height: 70,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.yellow,
-                              onPrimary: Colors.black,
+                              backgroundColor: Colors.yellow,
+                              foregroundColor: Colors.black,
                               shadowColor: Colors.yellowAccent,
                               elevation: 2,
                               shape: RoundedRectangleBorder(
@@ -164,14 +163,14 @@ class _CreditCard extends StatelessWidget {
                       fontSize: 28,
                       letterSpacing: 4,
                       fontWeight: FontWeight.w600,
-                      color: const Color.fromRGBO(180, 180, 180, 1)),
+                      color: Color.fromRGBO(180, 180, 180, 1)),
                 ),
                 const Text(
                   'Eduardo Vergara',
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: const Color.fromRGBO(180, 180, 180, 1)),
+                      color: Color.fromRGBO(180, 180, 180, 1)),
                 ),
               ],
             ),

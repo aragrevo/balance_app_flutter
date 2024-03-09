@@ -152,13 +152,13 @@ class _ExpensesChart extends StatelessWidget {
           borderData: FlBorderData(
             show: false,
           ),
-          gridData: FlGridData(show: false),
+          gridData: const FlGridData(show: false),
           titlesData: FlTitlesData(
             show: true,
-            rightTitles: AxisTitles(
+            rightTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false),
             ),
-            topTitles: AxisTitles(
+            topTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false),
             ),
             bottomTitles: AxisTitles(
@@ -195,8 +195,8 @@ class _ExpensesChart extends StatelessWidget {
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      child: text,
       angle: -1.2,
+      child: text,
     );
   }
 

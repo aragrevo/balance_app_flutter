@@ -12,6 +12,7 @@ class HomeController extends GetxController {
   var searching = false.obs;
 
   List<String> get months {
+    // ignore: invalid_use_of_protected_member
     final m = _months.value.map((e) => formattedDate(e)).toList();
     m.sort(
         (a, b) => transformStringToDate(a).compareTo(transformStringToDate(b)));
@@ -20,7 +21,9 @@ class HomeController extends GetxController {
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
 
+  @override
   void onInit() {
+    super.onInit();
     _months.bindStream(BalanceService().dataStream());
   }
 

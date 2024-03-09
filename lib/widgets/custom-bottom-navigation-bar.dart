@@ -1,6 +1,5 @@
 // ignore: file_names
 import 'package:balance_app/controllers/home.controller.dart';
-import 'package:balance_app/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

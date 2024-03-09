@@ -7,8 +7,8 @@ import 'package:balance_app/services/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class BalanceService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -23,6 +23,7 @@ class BalanceService {
         return b;
       } catch (e) {
         print(e);
+        rethrow;
       }
     });
   }
@@ -34,6 +35,7 @@ class BalanceService {
         .snapshots()
         .map((QuerySnapshot query) {
       List<String> retVal = [];
+      // ignore: avoid_function_literals_in_foreach_calls
       query.docs.forEach((doc) {
         retVal.add(doc.id);
       });
@@ -48,6 +50,7 @@ class BalanceService {
         .snapshots()
         .map((QuerySnapshot query) {
       List<Wallet> retVal = [];
+      // ignore: avoid_function_literals_in_foreach_calls
       query.docs.forEach((doc) {
         final wallet = doc.data() as Map<String, dynamic>;
         if (wallet['wallets'] != null) {
@@ -79,7 +82,7 @@ class BalanceService {
   String getCurrentMonth() {
     final monthName = DateFormat.MMMM().format(DateTime.now());
     final year = DateTime.now().year;
-    return monthName.toLowerCase() + year.toString() + '_' + authSvc.user!.id;
+    return '${monthName.toLowerCase()}${year}_${authSvc.user!.id}';
   }
 
   Future<bool> saveBalance(String id, Wallet data) async {

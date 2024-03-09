@@ -69,10 +69,10 @@ class _CustomFormState extends State<_CustomForm> {
       _isLoading = true;
       FocusScope.of(context).unfocus();
       setState(() {});
-      final user = {
-        'email': _emailController.text,
-        'password': _passwordController.text,
-      };
+      // final user = {
+      //   'email': _emailController.text,
+      //   'password': _passwordController.text,
+      // };
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Processing Data')),
       );

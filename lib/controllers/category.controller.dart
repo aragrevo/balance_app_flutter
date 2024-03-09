@@ -31,6 +31,7 @@ class CategoryController extends GetxController {
   }
 
   List<dynamic> get categories {
+    // ignore: invalid_use_of_protected_member
     final cat = _categories.value;
     cat.sort(((a, b) => a['name'].compareTo(b['name'])));
     return cat;

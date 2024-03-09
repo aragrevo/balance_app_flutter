@@ -21,10 +21,12 @@ class BalanceController extends GetxController {
   final isUpdating = false.obs;
 
   Balance? get balance => _balance.value;
+  // ignore: invalid_use_of_protected_member
   List<Wallet> get wallet => _wallet.value;
 
   @override
   void onInit() {
+    super.onInit();
     final monthName = BalanceService().getCurrentMonth();
     _balance.bindStream(BalanceService().balanceStream(monthName));
     _wallet.bindStream(BalanceService().walletStream());

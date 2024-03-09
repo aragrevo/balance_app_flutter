@@ -79,10 +79,6 @@ class WalletsSection extends StatelessWidget {
                           const CustomSpacer(5),
                           FloatingActionButton(
                               tooltip: 'Add pocket',
-                              child: Icon(
-                                Icons.add,
-                                color: ThemeColors.to.darkgray,
-                              ),
                               elevation: 2,
                               backgroundColor: Colors.white,
                               onPressed: () {
@@ -101,7 +97,11 @@ class WalletsSection extends StatelessWidget {
                                         borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(16),
                                             topRight: Radius.circular(16))));
-                              }),
+                              },
+                              child: Icon(
+                                Icons.add,
+                                color: ThemeColors.to.darkgray,
+                              )),
                         ],
                       ),
                     )
@@ -117,10 +117,9 @@ class WalletsSection extends StatelessWidget {
                               onPressed: () async {
                                 PocketController.to.createWallets();
                               },
-                              child: const Text('Add wallets'),
                               style: ElevatedButton.styleFrom(
-                                  primary: Colors.yellow,
-                                  onPrimary: Colors.black,
+                                  backgroundColor: Colors.yellow,
+                                  foregroundColor: Colors.black,
                                   shadowColor: Colors.yellowAccent,
                                   elevation: 2,
                                   shape: RoundedRectangleBorder(
@@ -129,15 +128,33 @@ class WalletsSection extends StatelessWidget {
                                   textStyle: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w600)),
+                              child: const Text('Add wallets'),
                             ),
                           )
                         else
-                          ...BalanceController.to.wallet
-                              .map((e) => _WalletWidget(
-                                    wallet: e,
-                                    money: authSvc.money,
-                                  ))
-                              .toList()
+                          Expanded(
+                            child: AspectRatio(
+                              aspectRatio: 3.1,
+                              child: ListView.builder(
+                                padding: const EdgeInsets.only(top: 11),
+                                itemCount: BalanceController.to.wallet.length,
+                                physics: const BouncingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  final wallet =
+                                      BalanceController.to.wallet[index];
+                                  return _WalletWidget(
+                                      wallet: wallet, money: authSvc.money);
+                                },
+                              ),
+                            ),
+                          )
+                        // ...BalanceController.to.wallet
+                        //     .map((e) => _WalletWidget(
+                        //           wallet: e,
+                        //           money: authSvc.money,
+                        //         ))
+                        //     .toList()
                       ],
                     ))
               ]);
@@ -232,7 +249,7 @@ class _WalletWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final value = money == Money.eur ? wallet.euro : wallet.value;
+    final value = money == Money.eur ? wallet.euro ?? 0 : wallet.value;
     return GestureDetector(
       onTap: () {
         BalanceController.to.resetForm();
@@ -251,11 +268,89 @@ class _WalletWidget extends StatelessWidget {
               )
             ]);
       },
-      child: CustomCard(
+      child: WalletCard(
         icon: walletIcons[wallet.icon]!,
-        subtitle: toCurrency(value ?? 0, money: money),
+        subtitle: value >= 1000000
+            ? value.toString().toHuman
+            : toCurrency(value, money: money),
         title: wallet.name,
       ),
+    );
+  }
+}
+
+class WalletCard extends StatelessWidget {
+  const WalletCard({
+    Key? key,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+  }) : super(key: key);
+
+  final String title;
+  final String subtitle;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: ThemeColors.to.backgroundCard,
+      clipBehavior: Clip.none,
+      child: SizedBox(
+          width: 85,
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  transform: Matrix4.translationValues(0, -10, 0),
+                  child: Center(
+                    child: CircleAvatar(
+                      radius: 25,
+                      backgroundColor: ThemeColors.to.darkblue,
+                      child: Icon(
+                        icon,
+                        size: 34,
+                        color: ThemeColors.to.backgroundCard.withOpacity(0.8),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 5,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          title.toCapitalize,
+                          style: TextStyle(
+                              color: ThemeColors.to.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          subtitle,
+                          style: TextStyle(
+                              color: ThemeColors.to.darkgray, fontSize: 12),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          )),
     );
   }
 }
@@ -284,15 +379,15 @@ class CustomCard extends StatelessWidget {
           : ThemeColors.to.backgroundCard,
       child: Container(
           width: 100,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           child: Column(
             children: [
               Icon(
                 icon,
-                size: 38,
+                size: 34,
                 color: ThemeColors.to.darkgray,
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 4),
               FittedBox(
                 fit: BoxFit.contain,
                 child: Text(

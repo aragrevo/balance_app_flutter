@@ -68,9 +68,9 @@ class _Home extends StatelessWidget {
                 : BalanceController.to.createBalance();
           },
           tooltip: 'Increment',
-          child: const Icon(Icons.add),
           elevation: 2,
           backgroundColor: Colors.yellow[600],
+          child: const Icon(Icons.add),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: const CustomBottomNavigationBar(),
@@ -268,7 +268,7 @@ class _Item extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final symbol = money == Money.eur ? '€ ' : '\$ ';
+    // final symbol = money == Money.eur ? '€ ' : '\$ ';
     return Row(
       children: [
         Expanded(

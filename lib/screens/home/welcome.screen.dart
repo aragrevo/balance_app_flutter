@@ -19,9 +19,9 @@ class WelcomeScreen extends StatelessWidget {
       width: double.infinity,
       height: double.infinity,
       color: ThemeColors.to.backgroundCard,
-      child: SafeArea(
+      child: const SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -30,7 +30,7 @@ class WelcomeScreen extends StatelessWidget {
                   height: double.infinity,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       _Title(),
                       SizedBox(
                         height: 40,
@@ -40,7 +40,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const _Button()
+              _Button()
             ],
           ),
         ),
@@ -56,7 +56,7 @@ class _MoneyList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+    return const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       MoneyCard(
         money: Money.eur,
       ),
@@ -99,19 +99,19 @@ class _Button extends StatelessWidget {
         width: double.infinity,
         height: 70,
         child: ElevatedButton(
-          child: const Text('Continue'),
           onPressed: () async {
             Get.offNamedUntil(HomeScreen.routeName, (route) => false);
           },
           style: ElevatedButton.styleFrom(
-              primary: Colors.yellow,
-              onPrimary: Colors.black,
+              backgroundColor: Colors.yellow,
+              foregroundColor: Colors.black,
               shadowColor: Colors.yellowAccent,
               elevation: 2,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0)),
               textStyle:
                   const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+          child: const Text('Continue'),
         ),
       ),
     );

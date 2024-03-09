@@ -37,7 +37,7 @@ class ItemCard extends StatelessWidget {
                 : Text(title.substring(0, 2).toUpperCase())),
         title: Row(
           children: [
-            Expanded(child: Text(title.toCapitalize), flex: 1),
+            Expanded(flex: 1, child: Text(title.toCapitalize)),
             Text(toCurrency(item.cost, money: authSvc.money),
                 style: const TextStyle(fontWeight: FontWeight.w600)),
           ],
@@ -63,7 +63,7 @@ class ItemCard extends StatelessWidget {
                 CategoryController.to.date.value = DateTime.parse(item.date);
                 CategoryController.to.dateCtrl.text =
                     DateTime.parse(item.date).formatDate;
-                WidgetsBinding.instance?.addPostFrameCallback((_) async {
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
                   Get.bottomSheet(
                       Container(
                         height: Get.height / 1.65,
@@ -90,8 +90,8 @@ class ItemCard extends StatelessWidget {
                               topRight: Radius.circular(16))));
                 });
               },
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   Icon(
                     Icons.edit_rounded,
                     color: Colors.indigoAccent,
@@ -105,7 +105,7 @@ class ItemCard extends StatelessWidget {
             ),
             PopupMenuItem(
               onTap: () async {
-                WidgetsBinding.instance?.addPostFrameCallback((_) async {
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
                   Get.defaultDialog(middleText: 'Are you sure?', actions: [
                     ElevatedButton(
                         onPressed: () async {
@@ -116,8 +116,8 @@ class ItemCard extends StatelessWidget {
                   ]);
                 });
               },
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   Icon(
                     Icons.delete_rounded,
                     color: Colors.redAccent,

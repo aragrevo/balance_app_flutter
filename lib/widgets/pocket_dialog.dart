@@ -67,6 +67,7 @@ class PocketForm extends StatelessWidget {
                 if (value == null || value.isEmpty) {
                   return 'This field is required';
                 }
+                return null;
               },
             ),
             const CustomSpacer(10),
@@ -81,6 +82,7 @@ class PocketForm extends StatelessWidget {
                 if (value == null || value.isEmpty) {
                   return 'This field is required';
                 }
+                return null;
               },
             ),
             const CustomSpacer(10),

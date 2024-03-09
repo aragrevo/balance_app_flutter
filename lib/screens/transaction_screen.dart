@@ -1,6 +1,4 @@
-import 'package:balance_app/controllers/category.controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../widgets/widgets.dart';
 
@@ -31,8 +29,8 @@ class _Body extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(20),
           color: Colors.white,
-          child: Column(
-            children: const [
+          child: const Column(
+            children: [
               Hero(
                   tag: 'bitcoin-image',
                   child: Image(
