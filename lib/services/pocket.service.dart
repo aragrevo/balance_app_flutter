@@ -19,6 +19,7 @@ class PocketService {
         .snapshots()
         .map((QuerySnapshot query) {
       List<Pocket> retVal = [];
+      // ignore: avoid_function_literals_in_foreach_calls
       query.docs.forEach((doc) {
         final pocket = doc.data() as Map<String, dynamic>;
         if (!authSvc.isEuro && pocket['money'] == Money.eur.name) {

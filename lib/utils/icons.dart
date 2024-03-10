@@ -36,9 +36,14 @@ Map<String, IconData> walletIcons = {
 Map<String, IconData> pocketIcons = {
   'card': Icons.credit_card,
   'box': Icons.money,
+  'cash': Icons.money,
   'pocket': Icons.gite_sharp,
   'tyba': Icons.donut_large,
   'littio': Icons.currency_exchange_rounded,
   'airtm': Icons.currency_bitcoin_rounded,
-  'sosty': Icons.cruelty_free_rounded
+  'sosty': Icons.cruelty_free_rounded,
+  'global66': Icons.currency_exchange_rounded,
+  'falabella': Icons.credit_card,
+  'investwe': Icons.holiday_village,
+  'hapi': Icons.wifi_protected_setup,
 };

@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
                 page: () => LogsScreen(),
                 transition: Transition.leftToRightWithFade),
           ],
-          theme: ThemeData.light().copyWith(
+          theme: ThemeData.light(useMaterial3: false).copyWith(
             cardTheme: CardTheme(
                 elevation: 0,
                 color: const Color.fromRGBO(249, 249, 249, 1),

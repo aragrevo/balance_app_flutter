@@ -19,6 +19,7 @@ class LogService {
         .snapshots()
         .map((QuerySnapshot query) {
       List<Log> retVal = [];
+      // ignore: avoid_function_literals_in_foreach_calls
       query.docs.forEach((doc) {
         final log = doc.data() as Map<String, dynamic>;
         try {

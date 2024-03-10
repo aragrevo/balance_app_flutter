@@ -22,120 +22,118 @@ class PocketScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authSvc = Provider.of<AuthService>(context, listen: false);
     final money = authSvc.money;
-    return Positioned.fill(
-      child: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Have(),
-            const WalletsSection(),
-            Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Obx(() {
-                            return _ListSection(
-                              title: 'Rest of balance',
-                              amount: toCurrency(
-                                  PocketController.to.totalPocketRest,
-                                  money: money),
-                              pockets: PocketController.to.pocketRest,
-                            );
-                          }),
-                          Obx(() {
-                            return _ListSection(
-                              title: 'Saved pockets',
-                              amount: toCurrency(
-                                  PocketController.to.totalPocketSaved,
-                                  money: money),
-                              pockets: PocketController.to.pocketSaved,
-                            );
-                          }),
-                        ],
-                      ),
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Have(),
+          const WalletsSection(),
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Obx(() {
+                          return _ListSection(
+                            title: 'Rest of balance',
+                            amount: toCurrency(
+                                PocketController.to.totalPocketRest,
+                                money: money),
+                            pockets: PocketController.to.pocketRest,
+                          );
+                        }),
+                        Obx(() {
+                          return _ListSection(
+                            title: 'Saved pockets',
+                            amount: toCurrency(
+                                PocketController.to.totalPocketSaved,
+                                money: money),
+                            pockets: PocketController.to.pocketSaved,
+                          );
+                        }),
+                      ],
                     ),
                   ),
-                  DraggableScrollableSheet(
-                    initialChildSize: 0.18,
-                    minChildSize: 0.18,
-                    maxChildSize: 0.99,
-                    builder: (BuildContext context,
-                        ScrollController scrollController) {
-                      final list =
-                          PocketController.to.balanceInWallets.entries.toList();
-                      list.sort(((a, b) => b.value.compareTo(a.value)));
-                      return Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            topLeft: Radius.circular(20),
-                          ),
+                ),
+                DraggableScrollableSheet(
+                  initialChildSize: 0.25,
+                  minChildSize: 0.25,
+                  maxChildSize: 0.99,
+                  builder: (BuildContext context,
+                      ScrollController scrollController) {
+                    final list =
+                        PocketController.to.balanceInWallets.entries.toList();
+                    list.sort(((a, b) => b.value.compareTo(a.value)));
+                    return Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          topLeft: Radius.circular(20),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(bottom: 10, top: 10),
-                                height: 5,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.indigoAccent.withOpacity(0.4),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(8)),
-                                ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding:
+                                  const EdgeInsets.only(bottom: 10, top: 10),
+                              height: 5,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.indigoAccent.withOpacity(0.4),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(8)),
                               ),
-                              Expanded(
-                                child: ListView.builder(
-                                  physics: const BouncingScrollPhysics(),
-                                  controller: scrollController,
-                                  itemCount: list.length,
-                                  itemBuilder: (context, index) {
-                                    final item = list[index];
-                                    final icon =
-                                        pocketIcons[item.key.toLowerCase()] ??
-                                            Icons.image_not_supported_outlined;
-                                    return Card(
-                                      child: ListTile(
-                                        leading: Icon(icon),
-                                        title: Text(item.key.toCapitalize,
-                                            style: TextStyle(
-                                              color: ThemeColors.to.black,
-                                            )),
-                                        trailing: Text(
-                                          toCurrency(item.value,
-                                              money: authSvc.money),
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                controller: scrollController,
+                                itemCount: list.length,
+                                itemBuilder: (context, index) {
+                                  final item = list[index];
+                                  final icon =
+                                      pocketIcons[item.key.toLowerCase()] ??
+                                          Icons.image_not_supported_outlined;
+                                  return Card(
+                                    child: ListTile(
+                                      leading: Icon(icon),
+                                      title: Text(item.key.toCapitalize,
                                           style: TextStyle(
-                                              color: ThemeColors.to.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                            color: ThemeColors.to.black,
+                                          )),
+                                      trailing: Text(
+                                        toCurrency(item.value,
+                                            money: authSvc.money),
+                                        style: TextStyle(
+                                            color: ThemeColors.to.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    );
-                                  },
-                                ),
+                                    ),
+                                  );
+                                },
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+                      ),
+                    );
+                  },
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
@@ -177,7 +175,7 @@ class _ListSection extends StatelessWidget {
           ),
         ),
         AspectRatio(
-          aspectRatio: 2.9,
+          aspectRatio: 3,
           child: _PocketList(pockets: pockets),
         ),
       ],

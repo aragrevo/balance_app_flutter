@@ -25,6 +25,7 @@ class ExpensesService {
         .snapshots()
         .map((QuerySnapshot query) {
       List<Expense> retVal = [];
+      // ignore: avoid_function_literals_in_foreach_calls
       query.docs.forEach((doc) {
         final expense = doc.data() as Map<String, dynamic>;
         if (!authSvc.isEuro && expense['money'] == Money.eur.name) {
@@ -50,6 +51,7 @@ class ExpensesService {
         .snapshots()
         .map((QuerySnapshot query) {
       List<Expense> retVal = [];
+      // ignore: avoid_function_literals_in_foreach_calls
       query.docs.forEach((doc) {
         final expense = doc.data() as Map<String, dynamic>;
         if (!authSvc.isEuro && expense['money'] == Money.eur.name) {

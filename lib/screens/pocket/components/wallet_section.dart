@@ -134,7 +134,7 @@ class WalletsSection extends StatelessWidget {
                         else
                           Expanded(
                             child: AspectRatio(
-                              aspectRatio: 3.1,
+                              aspectRatio: 3.3,
                               child: ListView.builder(
                                 padding: const EdgeInsets.only(top: 11),
                                 itemCount: BalanceController.to.wallet.length,
@@ -320,7 +320,7 @@ class WalletCard extends StatelessWidget {
                 ),
               ),
               Positioned(
-                bottom: 5,
+                bottom: 8,
                 left: 0,
                 right: 0,
                 child: Center(
@@ -387,15 +387,18 @@ class CustomCard extends StatelessWidget {
                 size: 34,
                 color: ThemeColors.to.darkgray,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 6),
               FittedBox(
                 fit: BoxFit.contain,
                 child: Text(
                   title.toCapitalize,
                   style: TextStyle(
-                      color: ThemeColors.to.black, fontWeight: FontWeight.bold),
+                      color: ThemeColors.to.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
                 ),
               ),
+              const SizedBox(height: 4),
               FittedBox(
                 fit: BoxFit.contain,
                 child: Text(

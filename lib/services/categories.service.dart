@@ -8,6 +8,7 @@ class CategoriesService {
     List<dynamic> categories = [];
     QuerySnapshot querySnapshot =
         await _instance.where('type', isEqualTo: type).get();
+    // ignore: avoid_function_literals_in_foreach_calls
     querySnapshot.docs.forEach((doc) {
       final category = doc.data() as Map<String, dynamic>;
       final list = category['categories'];

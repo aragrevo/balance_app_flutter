@@ -97,46 +97,44 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: Container(
-        color: const Color(0xff2c4260),
-        child: Stack(
-          children: [
-            const _Summary(),
-            GetX<BalanceController>(
-              init: Get.put<BalanceController>(BalanceController()),
-              builder: (BalanceController ctrl) {
-                return _BalanceCard(balance: ctrl.balance?.balance);
-              },
-            ),
-            DraggableScrollableSheet(
-                initialChildSize: 0.75,
-                minChildSize: 0.75,
-                maxChildSize: 1,
-                snap: true,
-                builder: (context, scrollController) {
-                  return Container(
-                    padding: const EdgeInsets.only(left: 20, right: 20, top: 0),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        topLeft: Radius.circular(20),
-                      ),
+    return Container(
+      color: const Color(0xff2c4260),
+      child: Stack(
+        children: [
+          const _Summary(),
+          GetX<BalanceController>(
+            init: Get.put<BalanceController>(BalanceController()),
+            builder: (BalanceController ctrl) {
+              return _BalanceCard(balance: ctrl.balance?.balance);
+            },
+          ),
+          DraggableScrollableSheet(
+              initialChildSize: 0.75,
+              minChildSize: 0.75,
+              maxChildSize: 1,
+              snap: true,
+              builder: (context, scrollController) {
+                return Container(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 0),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(20),
                     ),
-                    child: GetX<ExpenseController>(
-                      init: Get.put<ExpenseController>(ExpenseController()),
-                      builder: (ExpenseController ctrl) {
-                        return _ExpensesList(
-                            scrollController: scrollController,
-                            expensesList: ctrl.expensesList,
-                            onRefresh: () async {});
-                      },
-                    ),
-                  );
-                }),
-          ],
-        ),
+                  ),
+                  child: GetX<ExpenseController>(
+                    init: Get.put<ExpenseController>(ExpenseController()),
+                    builder: (ExpenseController ctrl) {
+                      return _ExpensesList(
+                          scrollController: scrollController,
+                          expensesList: ctrl.expensesList,
+                          onRefresh: () async {});
+                    },
+                  ),
+                );
+              }),
+        ],
       ),
     );
   }
